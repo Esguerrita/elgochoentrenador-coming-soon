@@ -9,7 +9,7 @@ import { supabase } from '@/lib/supabase'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const WA_BASE = 'https://wa.me/584120168219'
-const WA_MSG = encodeURIComponent('Hola, me interesa información sobre G8 Entrenador')
+const WA_MSG = encodeURIComponent('Hola, me interesa información sobre El Gocho Entrenador')
 const DIAS = ['Viernes', 'Sábado', 'Domingo'] as const
 const HORAS = ['9:00am', '11:00am', '1:00pm'] as const
 const MAX_CUPO = 6
@@ -206,7 +206,7 @@ export default function Home() {
                 Inscribe a tu hijo →
               </button>
               <a
-                href={`${WA_BASE}?text=${encodeURIComponent('Hola, quiero una clase de prueba gratis con G8 Entrenador')}`}
+                href={`${WA_BASE}?text=${encodeURIComponent('Hola, quiero una clase de prueba gratis con El Gocho Entrenador')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="border-2 border-white/35 text-white font-semibold text-lg px-8 py-4 rounded-2xl hover:border-white hover:bg-white/10 active:scale-95 transition-all"
@@ -348,7 +348,7 @@ export default function Home() {
                 ))}
               </ul>
               <a
-                href={`${WA_BASE}?text=${encodeURIComponent('Hola, me interesa el entrenamiento personalizado de G8 Entrenador')}`}
+                href={`${WA_BASE}?text=${encodeURIComponent('Hola, me interesa el entrenamiento personalizado de El Gocho Entrenador')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full block text-center border-2 border-white/30 text-white font-bold py-3.5 rounded-xl hover:border-white/60 hover:bg-white/5 transition"

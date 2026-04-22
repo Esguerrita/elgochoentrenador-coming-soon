@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const nombre = `${data.nombre_jugador} ${data.apellidos_jugador}`
 
     await resend.emails.send({
-      from: 'G8 Entrenador <onboarding@resend.dev>',
+      from: 'El Gocho Entrenador <onboarding@resend.dev>',
       to: process.env.COACH_EMAIL!,
       subject: `🆕 Nueva inscripción: ${nombre}`,
       html: buildEmailHTML(data),
@@ -46,7 +46,7 @@ function buildEmailHTML(d: Payload): string {
   <div style="max-width:560px;margin:0 auto;background:#1e1e70;border-radius:16px;overflow:hidden;">
     <div style="background:#ff8000;padding:24px 28px;">
       <h1 style="margin:0;color:#fff;font-size:22px;font-weight:800;">🆕 Nueva Solicitud de Inscripción</h1>
-      <p style="margin:4px 0 0;color:rgba(255,255,255,0.8);font-size:14px;">G8 Entrenador · Academia de Fútbol</p>
+      <p style="margin:4px 0 0;color:rgba(255,255,255,0.8);font-size:14px;">El Gocho Entrenador · Academia de Fútbol</p>
     </div>
     <div style="padding:28px;">
       <p style="color:rgba(241,240,236,0.5);font-size:12px;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 20px;font-weight:700;">Datos del jugador</p>
@@ -64,7 +64,7 @@ function buildEmailHTML(d: Payload): string {
       <a href="https://elgochoentrenador.vercel.app" style="display:block;background:#ff8000;color:#fff;text-decoration:none;text-align:center;padding:14px 24px;border-radius:10px;font-weight:700;font-size:15px;margin-top:24px;">Ver en la app →</a>
     </div>
     <div style="padding:16px 28px;background:rgba(0,0,0,0.25);text-align:center;">
-      <p style="margin:0;color:rgba(241,240,236,0.35);font-size:12px;">G8 Entrenador · Caracas, Venezuela</p>
+      <p style="margin:0;color:rgba(241,240,236,0.35);font-size:12px;">El Gocho Entrenador · Caracas, Venezuela</p>
     </div>
   </div>
 </body></html>`
