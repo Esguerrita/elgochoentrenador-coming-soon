@@ -9,7 +9,7 @@ import { supabase } from '@/lib/supabase'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const WA_BASE = 'https://wa.me/584120168219'
-const WA_MSG = encodeURIComponent('Hola, me interesa información sobre El Gocho Entrenador')
+const WA_MSG = encodeURIComponent('Hola, me interesan las clases personalizadas con El Gocho Entrenador')
 const DIAS = ['Viernes', 'Sábado', 'Domingo'] as const
 const HORAS = ['9:00am', '11:00am', '1:00pm'] as const
 const MAX_CUPO = 6
