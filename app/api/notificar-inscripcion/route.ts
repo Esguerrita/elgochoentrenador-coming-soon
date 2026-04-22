@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 interface Payload {
   nombre_jugador: string
   apellidos_jugador: string
@@ -16,6 +14,7 @@ interface Payload {
 }
 
 export async function POST(request: NextRequest) {
+  const resend = new Resend(process.env.RESEND_API_KEY)
   try {
     const data: Payload = await request.json()
     const nombre = `${data.nombre_jugador} ${data.apellidos_jugador}`
