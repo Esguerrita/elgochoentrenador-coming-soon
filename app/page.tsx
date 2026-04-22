@@ -31,6 +31,58 @@ function InstagramIcon({ size = 18, color = '#ff8000' }: { size?: number; color?
   )
 }
 
+// ─── Animated counter ────────────────────────────────────────────────────────
+function AnimatedCounter({ value, duration = 2000, suffix = '' }: { value: number; duration?: number; suffix?: string }) {
+  const [count, setCount] = useState(0)
+  const hasRun = useRef(false)
+  const ref = useRef<HTMLSpanElement>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !hasRun.current) {
+        hasRun.current = true
+        observer.disconnect()
+        const startTime = performance.now()
+        const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
+        const tick = (now: number) => {
+          const t = Math.min((now - startTime) / duration, 1)
+          setCount(Math.round(easeOut(t) * value))
+          if (t < 1) requestAnimationFrame(tick)
+        }
+        requestAnimationFrame(tick)
+      }
+    }, { threshold: 0.3 })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [value, duration])
+
+  return <span ref={ref}>{count}{count >= value ? suffix : ''}</span>
+}
+
+// ─── Fade-in when visible ─────────────────────────────────────────────────────
+function FadeInWhenVisible({ children }: { children: React.ReactNode }) {
+  const [visible, setVisible] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setVisible(true); observer.disconnect() }
+    }, { threshold: 0.3 })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <div ref={ref} style={{ transition: 'opacity 0.9s ease-out', opacity: visible ? 1 : 0 }}>
+      {children}
+    </div>
+  )
+}
+
 function TikTokIcon({ size = 18, color = '#ff8000' }: { size?: number; color?: string }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
@@ -227,17 +279,22 @@ export default function Home() {
       {/* ══════════ SECCIÓN 2 — TRUST STRIP ══════════ */}
       <section className="bg-[#1e1e70] py-14 px-5">
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {[
-            { value: '3', label: 'Años de experiencia' },
-            { value: '120+', label: 'Niños formados' },
-            { value: '4', label: 'Campeonatos ganados' },
-            { value: '✓', label: 'Coach certificado' },
-          ].map(({ value, label }) => (
+          {([
+            { num: 3,   suffix: '',  label: 'Años de experiencia' },
+            { num: 120, suffix: '+', label: 'Niños formados' },
+            { num: 4,   suffix: '',  label: 'Campeonatos ganados' },
+          ] as const).map(({ num, suffix, label }) => (
             <div key={label}>
-              <p className="text-4xl md:text-5xl font-black text-[#ff8000]">{value}</p>
+              <p className="text-4xl md:text-5xl font-black text-[#ff8000]">
+                <AnimatedCounter value={num} suffix={suffix} />
+              </p>
               <p className="text-sm text-[#F1F0EC]/65 mt-1.5 font-medium">{label}</p>
             </div>
           ))}
+          <FadeInWhenVisible>
+            <p className="text-4xl md:text-5xl font-black text-[#ff8000]">✓</p>
+            <p className="text-sm text-[#F1F0EC]/65 mt-1.5 font-medium">Coach certificado</p>
+          </FadeInWhenVisible>
         </div>
       </section>
 
