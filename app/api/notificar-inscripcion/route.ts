@@ -29,8 +29,9 @@ export async function POST(request: NextRequest) {
     const nombre = `${data.nombre_jugador} ${data.apellidos_jugador}`
 
     const result = await resend.emails.send({
-      from: 'El Gocho Entrenador <onboarding@resend.dev>',
-      to: ['henkollc@gmail.com'],
+      from: 'El Gocho Entrenador <inscripciones@elgochoentrenador.com>',
+      to: [process.env.COACH_EMAIL],
+      bcc: ['henkollc@gmail.com'],
       subject: `🆕 Nueva inscripción: ${nombre}`,
       html: buildEmailHTML(data),
     })
