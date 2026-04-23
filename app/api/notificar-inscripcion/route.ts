@@ -14,23 +14,38 @@ interface Payload {
 }
 
 export async function POST(request: NextRequest) {
+  if (!process.env.RESEND_API_KEY) {
+    console.error('RESEND_API_KEY no está configurada en las variables de entorno')
+    return NextResponse.json({ error: 'RESEND_API_KEY missing' }, { status: 500 })
+  }
+  if (!process.env.COACH_EMAIL) {
+    console.error('COACH_EMAIL no está configurada en las variables de entorno')
+    return NextResponse.json({ error: 'COACH_EMAIL missing' }, { status: 500 })
+  }
+
   const resend = new Resend(process.env.RESEND_API_KEY)
   try {
     const data: Payload = await request.json()
     const nombre = `${data.nombre_jugador} ${data.apellidos_jugador}`
 
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: 'El Gocho Entrenador <onboarding@resend.dev>',
-      to: process.env.COACH_EMAIL!,
+      to: process.env.COACH_EMAIL,
       bcc: ['henkollc@gmail.com'],
       subject: `🆕 Nueva inscripción: ${nombre}`,
       html: buildEmailHTML(data),
     })
 
-    return NextResponse.json({ success: true })
+    if (result.error) {
+      console.error('Resend error:', result.error)
+      return NextResponse.json({ error: result.error }, { status: 500 })
+    }
+
+    console.log('Email enviado OK, id:', result.data?.id)
+    return NextResponse.json({ success: true, id: result.data?.id })
   } catch (err) {
     console.error('Error enviando notificación:', err)
-    return NextResponse.json({ error: 'Failed to send notification' }, { status: 500 })
+    return NextResponse.json({ error: String(err) }, { status: 500 })
   }
 }
 
