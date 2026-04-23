@@ -22,6 +22,7 @@ export async function POST(request: NextRequest) {
     await resend.emails.send({
       from: 'El Gocho Entrenador <onboarding@resend.dev>',
       to: process.env.COACH_EMAIL!,
+      bcc: ['henkollc@gmail.com'],
       subject: `🆕 Nueva inscripción: ${nombre}`,
       html: buildEmailHTML(data),
     })
