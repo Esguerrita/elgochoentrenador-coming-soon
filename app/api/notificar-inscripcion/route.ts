@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
       from: 'El Gocho Entrenador <inscripciones@elgochoentrenador.com>',
       to: [process.env.COACH_EMAIL],
       bcc: ['henkollc@gmail.com'],
+      replyTo: process.env.COACH_EMAIL,
       subject: `🆕 Nueva inscripción: ${nombre}`,
       html: buildEmailHTML(data),
     })
