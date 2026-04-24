@@ -18,10 +18,6 @@ export const metadata: Metadata = {
     title: 'El Gocho Entrenador — Academia de Fútbol en Caracas',
     description: 'Academia de fútbol para niños de 7 a 15 años. Campeones Liga Colegial 2025.',
   },
-  icons: {
-    icon: '/logo.png',
-    apple: '/logo.png',
-  },
   robots: {
     index: true,
     follow: true,
