@@ -78,7 +78,7 @@ function buildEmailHTML(d: Payload): string {
       <p style="color:rgba(241,240,236,0.5);font-size:12px;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 20px;font-weight:700;">Turno preferido</p>
       ${row('Día y hora', `${d.turno_preferido_dia ?? 'No indicado'} · ${d.turno_preferido_hora ?? 'No indicado'}`)}
       ${d.notas ? row('Notas', d.notas) : ''}
-      <a href="https://football-app-chi.vercel.app/login" style="display:block;background:#ff8000;color:#fff;text-decoration:none;text-align:center;padding:14px 24px;border-radius:10px;font-weight:700;font-size:15px;margin-top:24px;">Ver en la app →</a>
+      <a href="https://football-app-chi.vercel.app/solicitudes" style="display:block;background:#ff8000;color:#fff;text-decoration:none;text-align:center;padding:14px 24px;border-radius:10px;font-weight:700;font-size:15px;margin-top:24px;">Ver solicitudes en la app →</a>
     </div>
     <div style="padding:16px 28px;background:rgba(0,0,0,0.25);text-align:center;">
       <p style="margin:0;color:rgba(241,240,236,0.35);font-size:12px;">El Gocho Entrenador · Caracas, Venezuela</p>
