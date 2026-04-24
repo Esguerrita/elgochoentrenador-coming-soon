@@ -35,7 +35,7 @@ const jsonLd = {
   description: 'Academia de fútbol para niños de 7 a 15 años en Caracas',
   url: 'https://elgochoentrenador.com',
   telephone: '+584120168219',
-  image: 'https://elgochoentrenador.com/opengraph-image',
+  image: 'https://elgochoentrenador.com/coach.png',
   logo: 'https://elgochoentrenador.com/logo.png',
   address: {
     '@type': 'PostalAddress',

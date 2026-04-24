@@ -306,7 +306,7 @@ export default function Home() {
             <div className="relative">
               <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-[#ff8000] shadow-2xl shadow-orange-500/20">
                 <Image
-                  src="https://images.unsplash.com/photo-1560272564-c83b66b1ad12?auto=format&fit=crop&w=600&q=80"
+                  src="/coach.png"
                   alt="Cristopher Martínez — El Gocho Entrenador"
                   fill
                   className="object-cover"
