@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
 import {
   Menu, X, Target, Trophy, Shield, MapPin,
   MessageCircle, Check, Star,
@@ -196,7 +197,7 @@ export default function Home() {
       {/* ── Mobile nav overlay ── */}
       {menuOpen && (
         <div className="fixed inset-0 z-40 bg-[#1e1e70] flex flex-col items-center justify-center gap-8">
-          <button onClick={() => setMenuOpen(false)} className="absolute top-6 right-5 text-white/60 hover:text-white">
+          <button onClick={() => setMenuOpen(false)} className="absolute top-6 right-5 text-white/60 hover:text-white" aria-label="Cerrar menú">
             <X size={28} />
           </button>
           {(['sobre', 'programas', 'logros', 'ubicacion'] as const).map((id) => {
@@ -226,12 +227,12 @@ export default function Home() {
 
         <nav className="relative z-10 flex items-center justify-between px-5 pt-6 max-w-6xl mx-auto w-full">
           <div className="flex items-center gap-2.5">
-            <img src="/logo.png" alt="G8 Entrenador" className="w-10 h-10 object-contain" />
+            <Image src="/logo.png" alt="El Gocho Entrenador" width={40} height={40} className="object-contain" priority />
             <span className="text-white font-bold text-sm leading-tight hidden sm:block">
               El Gocho<br /><span className="text-[#ff8000]">Entrenador</span>
             </span>
           </div>
-          <button onClick={() => setMenuOpen(true)} className="text-white/60 hover:text-white">
+          <button onClick={() => setMenuOpen(true)} className="text-white/60 hover:text-white" aria-label="Abrir menú">
             <Menu size={26} />
           </button>
         </nav>
@@ -303,11 +304,13 @@ export default function Home() {
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-14 items-center">
           <div className="flex justify-center">
             <div className="relative">
-              <div className="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-[#ff8000] shadow-2xl shadow-orange-500/20">
-                <img
+              <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-[#ff8000] shadow-2xl shadow-orange-500/20">
+                <Image
                   src="https://images.unsplash.com/photo-1560272564-c83b66b1ad12?auto=format&fit=crop&w=600&q=80"
                   alt="Cristopher Martínez — El Gocho Entrenador"
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 256px, 320px"
                 />
               </div>
               <div className="absolute -bottom-4 -right-4 bg-[#ff8000] rounded-2xl px-4 py-2.5 shadow-xl">
@@ -470,7 +473,7 @@ export default function Home() {
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Ubicación G8 Entrenador"
+              title="Ubicación El Gocho Entrenador"
             />
           </div>
           <div>
@@ -507,7 +510,7 @@ export default function Home() {
       <section className="bg-[#1e1e70] py-20 px-5">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Familias G8</span>
+            <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Familias</span>
             <h2 className="text-4xl md:text-5xl font-black text-white mt-2">Lo que dicen las familias</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-5">
@@ -524,7 +527,7 @@ export default function Home() {
                   </div>
                 </div>
                 <p className="text-[#F1F0EC]/35 text-sm italic leading-relaxed">
-                  Próximamente testimonios reales de familias G8
+                  Próximamente testimonios reales de nuestras familias
                 </p>
               </div>
             ))}
@@ -538,7 +541,7 @@ export default function Home() {
           <div className="text-center mb-10">
             <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Únete al equipo</span>
             <h2 className="text-4xl md:text-5xl font-black text-white mt-2 leading-tight">
-              ¿Listo para que tu hijo entrene con G8?
+              ¿Listo para que tu hijo entrene con El Gocho?
             </h2>
             <p className="text-[#F1F0EC]/55 text-base mt-3">
               Completa el formulario y te contactamos en 24 horas
@@ -589,16 +592,16 @@ export default function Home() {
                 <div className="space-y-4">
                   <h3 className="text-white font-bold text-lg mb-1">Sobre el jugador</h3>
                   <div>
-                    <label className="block text-white/50 text-xs font-semibold mb-1.5 uppercase tracking-wider">Nombre *</label>
-                    <input type="text" value={s1.nombreJugador} onChange={e => setS1({ ...s1, nombreJugador: e.target.value })} placeholder="Ej: Carlos" className={input} />
+                    <label htmlFor="nombre-jugador" className="block text-white/50 text-xs font-semibold mb-1.5 uppercase tracking-wider">Nombre *</label>
+                    <input id="nombre-jugador" type="text" value={s1.nombreJugador} onChange={e => setS1({ ...s1, nombreJugador: e.target.value })} placeholder="Ej: Carlos" className={input} />
                   </div>
                   <div>
-                    <label className="block text-white/50 text-xs font-semibold mb-1.5 uppercase tracking-wider">Apellidos *</label>
-                    <input type="text" value={s1.apellidosJugador} onChange={e => setS1({ ...s1, apellidosJugador: e.target.value })} placeholder="Ej: Rodríguez Pérez" className={input} />
+                    <label htmlFor="apellidos-jugador" className="block text-white/50 text-xs font-semibold mb-1.5 uppercase tracking-wider">Apellidos *</label>
+                    <input id="apellidos-jugador" type="text" value={s1.apellidosJugador} onChange={e => setS1({ ...s1, apellidosJugador: e.target.value })} placeholder="Ej: Rodríguez Pérez" className={input} />
                   </div>
                   <div>
-                    <label className="block text-white/50 text-xs font-semibold mb-1.5 uppercase tracking-wider">Fecha de nacimiento *</label>
-                    <input type="date" value={s1.fechaNacimiento} onChange={e => setS1({ ...s1, fechaNacimiento: e.target.value })} className={input} style={{ colorScheme: 'dark' }} />
+                    <label htmlFor="fecha-nacimiento" className="block text-white/50 text-xs font-semibold mb-1.5 uppercase tracking-wider">Fecha de nacimiento *</label>
+                    <input id="fecha-nacimiento" type="date" value={s1.fechaNacimiento} onChange={e => setS1({ ...s1, fechaNacimiento: e.target.value })} className={input} style={{ colorScheme: 'dark' }} />
                   </div>
                   <button
                     onClick={() => { const err = validateS1(); if (err) { setFormError(err); return } setFormError(''); setPaso(2) }}
@@ -614,18 +617,18 @@ export default function Home() {
                 <div className="space-y-4">
                   <h3 className="text-white font-bold text-lg mb-1">Sobre ti</h3>
                   <div>
-                    <label className="block text-white/50 text-xs font-semibold mb-1.5 uppercase tracking-wider">Tu nombre completo *</label>
-                    <input type="text" value={s2.nombreRepresentante} onChange={e => setS2({ ...s2, nombreRepresentante: e.target.value })} placeholder="Ej: María González" className={input} />
+                    <label htmlFor="nombre-representante" className="block text-white/50 text-xs font-semibold mb-1.5 uppercase tracking-wider">Tu nombre completo *</label>
+                    <input id="nombre-representante" type="text" value={s2.nombreRepresentante} onChange={e => setS2({ ...s2, nombreRepresentante: e.target.value })} placeholder="Ej: María González" className={input} />
                   </div>
                   <div>
-                    <label className="block text-white/50 text-xs font-semibold mb-1.5 uppercase tracking-wider">Teléfono *</label>
-                    <input type="tel" value={s2.telefonoRepresentante} onChange={e => setS2({ ...s2, telefonoRepresentante: e.target.value })} placeholder="+58 414 123 4567" className={input} />
+                    <label htmlFor="telefono-representante" className="block text-white/50 text-xs font-semibold mb-1.5 uppercase tracking-wider">Teléfono *</label>
+                    <input id="telefono-representante" type="tel" value={s2.telefonoRepresentante} onChange={e => setS2({ ...s2, telefonoRepresentante: e.target.value })} placeholder="+58 414 123 4567" className={input} />
                   </div>
                   <div>
-                    <label className="block text-white/50 text-xs font-semibold mb-1.5 uppercase tracking-wider">
+                    <label htmlFor="email-representante" className="block text-white/50 text-xs font-semibold mb-1.5 uppercase tracking-wider">
                       Email <span className="text-white/25 normal-case">(opcional)</span>
                     </label>
-                    <input type="email" value={s2.emailRepresentante} onChange={e => setS2({ ...s2, emailRepresentante: e.target.value })} placeholder="ejemplo@correo.com" className={input} />
+                    <input id="email-representante" type="email" value={s2.emailRepresentante} onChange={e => setS2({ ...s2, emailRepresentante: e.target.value })} placeholder="ejemplo@correo.com" className={input} />
                   </div>
                   <div className="flex gap-3 mt-2">
                     <button onClick={() => { setFormError(''); setPaso(1) }} className="flex-1 border border-white/15 text-white/60 font-semibold py-3.5 rounded-xl hover:border-white/30 hover:text-white transition">
@@ -731,7 +734,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
             <div className="flex items-center gap-3">
-              <img src="/logo.png" alt="G8 Entrenador" className="w-12 h-12 object-contain" />
+              <Image src="/logo.png" alt="El Gocho Entrenador" width={48} height={48} className="object-contain" />
               <div>
                 <p className="text-white font-black text-lg leading-tight">El Gocho Entrenador</p>
                 <p className="text-white/35 text-xs mt-0.5">Academia de fútbol · Caracas</p>
