@@ -202,6 +202,7 @@ export default function Home() {
   const [enviando, setEnviando] = useState(false)
   const [enviado, setEnviado] = useState(false)
   const [formError, setFormError] = useState('')
+  const [turnoInfo, setTurnoInfo] = useState('')
   const [cupos, setCupos] = useState<Record<string, number>>({})
 
   const [s1, setS1] = useState<S1>({ nombreJugador: '', apellidosJugador: '', fechaNacimiento: '' })
@@ -244,7 +245,10 @@ export default function Home() {
 
   async function loadCupos() {
     try {
-      const { data } = await supabase.from('horarios').select('dia, hora')
+      const { data } = await supabase
+        .from('horarios')
+        .select('dia, hora, jugadores!inner(activo)')
+        .eq('jugadores.activo', true)
       if (!data) return
       const counts: Record<string, number> = {}
       for (const h of data) {
@@ -815,7 +819,7 @@ export default function Home() {
                         <button
                           key={dia}
                           type="button"
-                          onClick={() => setS3({ ...s3, dia, hora: '' })}
+                          onClick={() => { setS3({ ...s3, dia, hora: '' }); setTurnoInfo('') }}
                           className={`py-3 rounded-xl text-sm font-bold transition-all ${
                             s3.dia === dia
                               ? 'bg-[#ff8000] text-white'
@@ -837,8 +841,14 @@ export default function Home() {
                           <button
                             key={hora}
                             type="button"
-                            disabled={lleno}
-                            onClick={() => !lleno && setS3({ ...s3, hora })}
+                            onClick={() => {
+                              if (lleno) {
+                                setTurnoInfo('Este turno está lleno. Puedes seleccionar otro día u hora, o hablar la posibilidad con el entrenador.')
+                              } else {
+                                setTurnoInfo('')
+                                setS3({ ...s3, hora })
+                              }
+                            }}
                             className={`py-3 rounded-xl text-sm font-bold transition-all flex flex-col items-center gap-0.5 ${
                               s3.hora === hora
                                 ? 'bg-[#ff8000] text-white'
@@ -857,6 +867,12 @@ export default function Home() {
                         )
                       })}
                     </div>
+                    {turnoInfo && (
+                      <div className="mt-3 flex items-start gap-2 bg-[#ff8000]/10 border border-[#ff8000]/30 rounded-xl px-4 py-3">
+                        <span className="text-[#ff8000] text-base leading-none mt-0.5">⚠️</span>
+                        <p className="text-[#ff8000]/90 text-xs leading-relaxed">{turnoInfo}</p>
+                      </div>
+                    )}
                   </div>
                   <div>
                     <label className="block text-white/50 text-xs font-semibold mb-2 uppercase tracking-wider">
