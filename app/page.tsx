@@ -4,13 +4,14 @@ import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import {
   Menu, X, Target, Trophy, Shield, MapPin,
-  MessageCircle, Check, Star,
+  MessageCircle, Check, Star, UserPlus,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const WA_BASE = 'https://wa.me/584120168219'
 const WA_MSG = encodeURIComponent('Hola, me interesan las clases personalizadas con El Gocho Entrenador')
+const WA_PRUEBA = encodeURIComponent('Hola, quiero agendar una clase de prueba gratis para mi hijo')
 const DIAS = ['Viernes', 'Sábado', 'Domingo'] as const
 const HORAS = ['9:00am', '11:00am', '1:00pm'] as const
 const MAX_CUPO = 6
@@ -28,6 +29,14 @@ function InstagramIcon({ size = 18, color = '#ff8000' }: { size?: number; color?
       <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
       <circle cx="12" cy="12" r="4" />
       <circle cx="17.5" cy="6.5" r="1" fill={color} stroke="none" />
+    </svg>
+  )
+}
+
+function TikTokIcon({ size = 18, color = '#ff8000' }: { size?: number; color?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
+      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.19 8.19 0 004.79 1.53V6.78a4.85 4.85 0 01-1.02-.09z" />
     </svg>
   )
 }
@@ -84,17 +93,110 @@ function FadeInWhenVisible({ children }: { children: React.ReactNode }) {
   )
 }
 
-function TikTokIcon({ size = 18, color = '#ff8000' }: { size?: number; color?: string }) {
+// ─── Exit-intent modal ───────────────────────────────────────────────────────
+function ExitPopup({ onClose }: { onClose: () => void }) {
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    // Auto-focus first interactive element
+    modalRef.current?.querySelector<HTMLElement>('a, button')?.focus()
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [onClose])
+
+  function trapFocus(e: React.KeyboardEvent) {
+    if (e.key !== 'Tab') return
+    const focusable = modalRef.current?.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
+    if (!focusable || focusable.length === 0) return
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus() }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus() }
+    }
+  }
+
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
-      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.19 8.19 0 004.79 1.53V6.78a4.85 4.85 0 01-1.02-.09z" />
-    </svg>
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center px-4"
+      style={{ background: 'rgba(0,0,0,0.72)' }}
+      onClick={onClose}
+    >
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="exit-title"
+        className="relative w-full max-w-[420px] bg-[#1e1e70] border border-[#ff8000]/30 rounded-3xl p-8 shadow-2xl"
+        style={{
+          animation: 'exitPopupIn 250ms ease-out forwards',
+        }}
+        onClick={e => e.stopPropagation()}
+        onKeyDown={trapFocus}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white/40 hover:text-white transition"
+          aria-label="Cerrar"
+        >
+          <X size={22} />
+        </button>
+
+        {/* Content */}
+        <p className="text-3xl mb-3">👋</p>
+        <h2 id="exit-title" className="text-2xl font-black text-white mb-2">¡Espera!</h2>
+        <p className="text-[#ff8000] font-bold text-base mb-4">
+          Agenda una clase de prueba <span className="underline underline-offset-2">GRATIS</span> para tu hijo
+        </p>
+        <p className="text-[#F1F0EC]/65 text-sm leading-relaxed mb-7">
+          Descubre por qué más de 120 familias confían en El Gocho Entrenador. Sin compromiso, sin costo.
+        </p>
+        <div className="flex flex-col gap-3">
+          <a
+            href={`${WA_BASE}?text=${WA_PRUEBA}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onClose}
+            className="w-full flex items-center justify-center gap-2 bg-[#ff8000] text-white font-bold py-3.5 rounded-xl hover:bg-orange-600 active:scale-95 transition-all"
+          >
+            <MessageCircle size={18} />
+            Agendar clase gratis
+          </a>
+          <button
+            onClick={onClose}
+            className="w-full border border-white/20 text-white/60 font-semibold py-3 rounded-xl hover:border-white/40 hover:text-white transition text-sm"
+          >
+            No, gracias
+          </button>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes exitPopupIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
+    </div>
   )
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function Home() {
   const formRef = useRef<HTMLDivElement>(null)
+  const formTouchedRef = useRef(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [showFloating, setShowFloating] = useState(false)
+  const [showExitPopup, setShowExitPopup] = useState(false)
 
   const [paso, setPaso] = useState(1)
   const [enviando, setEnviando] = useState(false)
@@ -107,6 +209,38 @@ export default function Home() {
   const [s3, setS3] = useState<S3>({ dia: '', hora: '', notas: '' })
 
   useEffect(() => { loadCupos() }, [])
+
+  // ── Floating CTA visibility on scroll ──
+  useEffect(() => {
+    const onScroll = () => setShowFloating(window.scrollY > 400)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // ── Exit-intent logic ──
+  useEffect(() => {
+    if (sessionStorage.getItem('exitShown')) return
+
+    const fire = () => {
+      if (sessionStorage.getItem('exitShown')) return
+      sessionStorage.setItem('exitShown', '1')
+      setShowExitPopup(true)
+    }
+
+    const isMobile = typeof window !== 'undefined' && ('ontouchstart' in window || window.innerWidth < 768)
+
+    if (!isMobile) {
+      const onMouseLeave = (e: MouseEvent) => { if (e.clientY < 10) fire() }
+      document.addEventListener('mouseleave', onMouseLeave)
+      return () => document.removeEventListener('mouseleave', onMouseLeave)
+    } else {
+      const timer = setTimeout(() => {
+        const scrollPct = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight
+        if (scrollPct >= 0.6 && !formTouchedRef.current) fire()
+      }, 45000)
+      return () => clearTimeout(timer)
+    }
+  }, [])
 
   async function loadCupos() {
     try {
@@ -183,16 +317,37 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-black text-[#F1F0EC] overflow-x-hidden">
 
-      {/* ── Floating WhatsApp ── */}
-      <a
-        href={`${WA_BASE}?text=${WA_MSG}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-5 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-transform"
-        aria-label="WhatsApp"
-      >
-        <MessageCircle size={26} color="white" fill="white" />
-      </a>
+      {/* ── Floating buttons ── */}
+      <div className="fixed bottom-6 right-5 z-50 flex items-center gap-3">
+        {/* CTA Inscribir — aparece tras scroll 400px */}
+        <button
+          onClick={scrollToForm}
+          aria-label="Ir al formulario de inscripción"
+          style={{
+            opacity: showFloating ? 1 : 0,
+            pointerEvents: showFloating ? 'auto' : 'none',
+            transition: 'opacity 300ms ease, transform 300ms ease',
+            boxShadow: '0 0 20px rgba(255,128,0,0.4), 0 8px 24px rgba(0,0,0,0.4)',
+          }}
+          className="w-14 h-14 bg-[#ff8000] rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
+        >
+          <UserPlus size={24} color="white" />
+        </button>
+
+        {/* WhatsApp */}
+        <a
+          href={`${WA_BASE}?text=${WA_MSG}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-transform"
+          aria-label="WhatsApp"
+        >
+          <MessageCircle size={26} color="white" fill="white" />
+        </a>
+      </div>
+
+      {/* ── Exit-intent popup ── */}
+      {showExitPopup && <ExitPopup onClose={() => setShowExitPopup(false)} />}
 
       {/* ── Mobile nav overlay ── */}
       {menuOpen && (
@@ -536,7 +691,12 @@ export default function Home() {
       </section>
 
       {/* ══════════ SECCIÓN 9 — FORMULARIO ══════════ */}
-      <div ref={formRef} id="inscripcion" className="bg-black py-20 px-5">
+      <div
+        ref={formRef}
+        id="inscripcion"
+        className="bg-black py-20 px-5"
+        onFocus={() => { formTouchedRef.current = true }}
+      >
         <div className="max-w-lg mx-auto">
           <div className="text-center mb-10">
             <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Únete al equipo</span>
