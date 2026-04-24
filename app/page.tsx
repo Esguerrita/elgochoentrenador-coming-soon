@@ -309,7 +309,7 @@ export default function Home() {
                   src="/coach.png"
                   alt="Cristopher Martínez — El Gocho Entrenador"
                   fill
-                  className="object-cover"
+                  className="object-cover object-top"
                   sizes="(max-width: 768px) 256px, 320px"
                 />
               </div>
