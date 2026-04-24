@@ -793,13 +793,13 @@ export default function Home() {
                       <select
                         value={paisIdx}
                         onChange={e => setPaisIdx(Number(e.target.value))}
-                        className="bg-white/5 border border-white/15 rounded-xl px-3 py-3 text-white text-sm focus:outline-none focus:border-[#ff8000] focus:ring-1 focus:ring-[#ff8000] transition flex-shrink-0"
+                        className="bg-white/5 border border-white/15 rounded-xl px-3 py-3 text-white text-sm focus:outline-none focus:border-[#ff8000] focus:ring-1 focus:ring-[#ff8000] transition flex-shrink-0 w-[52%]"
                         style={{ colorScheme: 'dark' }}
                         aria-label="Código de país"
                       >
                         {PAISES.map((p, i) => (
                           <option key={i} value={i} style={{ background: '#1e1e70', color: '#fff' }}>
-                            {p.bandera} {p.codigo}
+                            {p.bandera} {p.nombre} ({p.codigo})
                           </option>
                         ))}
                       </select>
