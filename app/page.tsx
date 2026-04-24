@@ -7,6 +7,7 @@ import {
   MessageCircle, Check, Star, UserPlus,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { PAISES, VE_IDX } from '@/data/paises'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const WA_BASE = 'https://wa.me/584120168219'
@@ -206,7 +207,9 @@ export default function Home() {
   const [cupos, setCupos] = useState<Record<string, number>>({})
 
   const [s1, setS1] = useState<S1>({ nombreJugador: '', apellidosJugador: '', fechaNacimiento: '' })
-  const [s2, setS2] = useState<S2>({ nombreRepresentante: '', telefonoRepresentante: '+58 ', emailRepresentante: '' })
+  const [s2, setS2] = useState<S2>({ nombreRepresentante: '', telefonoRepresentante: '', emailRepresentante: '' })
+  const [paisIdx, setPaisIdx] = useState(VE_IDX)
+  const [numeroTel, setNumeroTel] = useState('')
   const [s3, setS3] = useState<S3>({ dia: '', hora: '', notas: '' })
 
   useEffect(() => { loadCupos() }, [])
@@ -278,7 +281,7 @@ export default function Home() {
 
   function validateS2(): string {
     if (!s2.nombreRepresentante.trim()) return 'Ingresa tu nombre'
-    if (!s2.telefonoRepresentante.trim() || s2.telefonoRepresentante === '+58 ') return 'Ingresa tu teléfono'
+    if (!numeroTel.trim()) return 'Ingresa tu teléfono'
     return ''
   }
 
@@ -293,7 +296,7 @@ export default function Home() {
         apellidos_jugador: s1.apellidosJugador.trim(),
         fecha_nacimiento: s1.fechaNacimiento,
         nombre_representante: s2.nombreRepresentante.trim(),
-        telefono_representante: s2.telefonoRepresentante.trim(),
+        telefono_representante: `${PAISES[paisIdx].codigo} ${numeroTel.trim()}`,
         email_representante: s2.emailRepresentante.trim() || null,
         turno_preferido_dia: s3.dia,
         turno_preferido_hora: s3.hora,
@@ -786,7 +789,29 @@ export default function Home() {
                   </div>
                   <div>
                     <label htmlFor="telefono-representante" className="block text-white/50 text-xs font-semibold mb-1.5 uppercase tracking-wider">Teléfono *</label>
-                    <input id="telefono-representante" type="tel" value={s2.telefonoRepresentante} onChange={e => setS2({ ...s2, telefonoRepresentante: e.target.value })} placeholder="+58 414 123 4567" className={input} />
+                    <div className="flex gap-2">
+                      <select
+                        value={paisIdx}
+                        onChange={e => setPaisIdx(Number(e.target.value))}
+                        className="bg-white/5 border border-white/15 rounded-xl px-3 py-3 text-white text-sm focus:outline-none focus:border-[#ff8000] focus:ring-1 focus:ring-[#ff8000] transition flex-shrink-0"
+                        style={{ colorScheme: 'dark' }}
+                        aria-label="Código de país"
+                      >
+                        {PAISES.map((p, i) => (
+                          <option key={i} value={i} style={{ background: '#1e1e70', color: '#fff' }}>
+                            {p.bandera} {p.codigo}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        id="telefono-representante"
+                        type="tel"
+                        value={numeroTel}
+                        onChange={e => setNumeroTel(e.target.value)}
+                        placeholder="414 123 4567"
+                        className={input}
+                      />
+                    </div>
                   </div>
                   <div>
                     <label htmlFor="email-representante" className="block text-white/50 text-xs font-semibold mb-1.5 uppercase tracking-wider">
