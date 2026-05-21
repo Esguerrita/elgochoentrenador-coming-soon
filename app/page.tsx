@@ -5,6 +5,8 @@ import Image from 'next/image'
 import {
   Menu, X, Target, Trophy, Shield, MapPin,
   MessageCircle, Check, Star, UserPlus,
+  Send, CircleDot, Zap, Goal, Eye,
+  Sprout, Award, Brain, Heart, Activity, Users,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { PAISES, VE_IDX } from '@/data/paises'
@@ -358,14 +360,22 @@ export default function Home() {
 
       {/* ── Mobile nav overlay ── */}
       {menuOpen && (
-        <div className="fixed inset-0 z-40 bg-[#1e1e70] flex flex-col items-center justify-center gap-8">
+        <div className="fixed inset-0 z-40 bg-[#1e1e70] flex flex-col items-center justify-center gap-5 overflow-y-auto py-12">
           <button onClick={() => setMenuOpen(false)} className="absolute top-6 right-5 text-white/60 hover:text-white" aria-label="Cerrar menú">
             <X size={28} />
           </button>
-          {(['sobre', 'programas', 'logros', 'ubicacion'] as const).map((id) => {
-            const labels: Record<string, string> = { sobre: 'Sobre el coach', programas: 'Programas', logros: 'Logros', ubicacion: 'Ubicación' }
+          {(['sobre', 'fundamentos', 'sesion', 'etapas', 'programas', 'logros', 'ubicacion'] as const).map((id) => {
+            const labels: Record<string, string> = {
+              sobre: 'Sobre el coach',
+              fundamentos: 'Fundamentos',
+              sesion: 'La sesión',
+              etapas: 'Etapas',
+              programas: 'Programas',
+              logros: 'Logros',
+              ubicacion: 'Ubicación',
+            }
             return (
-              <button key={id} onClick={() => scrollTo(id)} className="text-2xl font-bold text-white hover:text-[#ff8000] transition">
+              <button key={id} onClick={() => scrollTo(id)} className="text-xl font-bold text-white hover:text-[#ff8000] transition">
                 {labels[id]}
               </button>
             )
@@ -502,18 +512,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════════ SECCIÓN 4 — 3 PILARES ══════════ */}
-      <section id="programas" className="bg-[#1e1e70] py-20 px-5">
+      {/* ══════════ SECCIÓN 4 — FUNDAMENTOS TÉCNICOS ══════════ */}
+      <section id="fundamentos" className="bg-[#1e1e70] py-20 px-5">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Metodología</span>
-            <h2 className="text-4xl md:text-5xl font-black text-white mt-2">Nuestra metodología</h2>
+            <h2 className="text-4xl md:text-5xl font-black text-white mt-2 mb-4">Fundamentos técnicos</h2>
+            <p className="text-[#F1F0EC]/65 text-base max-w-2xl mx-auto leading-relaxed">
+              Cada entrenamiento se construye sobre cinco fundamentos que forman jugadores completos.
+            </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
-              { Icon: Target, title: 'Resultados conscientes', desc: 'Entrenamos con objetivos claros y medibles. Cada sesión tiene un propósito: mejorar técnica, táctica y mentalidad para resultados reales.' },
-              { Icon: Trophy, title: 'Técnica', desc: 'Fundamentos sólidos desde temprana edad. Control de balón, pase, regate y definición trabajados con método y progresión.' },
-              { Icon: Shield, title: 'Disciplina y compromiso', desc: 'Los valores que forman líderes. Respeto, puntualidad y trabajo en equipo son parte del entrenamiento diario.' },
+              { Icon: Send,       title: 'Pase',             desc: 'La base del juego en equipo. Precisión, peso del balón y toma de decisiones para conectar cada acción ofensiva.' },
+              { Icon: CircleDot,  title: 'Control',          desc: 'Control orientado en espacios reducidos. Dominio del primer toque para ganar tiempo y ventaja sobre el rival.' },
+              { Icon: Zap,        title: 'Conducción',       desc: 'Velocidad, cambio de dirección y manejo del balón en carrera. Llevar el juego con criterio y agresividad.' },
+              { Icon: Goal,       title: 'Definición',       desc: 'Remate con empeine, interior y borde. Lectura del arquero, ángulos y serenidad en el área para terminar las jugadas.' },
+              { Icon: Eye,        title: 'Visión de juego',  desc: 'Leer la cancha antes de recibir. Anticipar movimientos, encontrar espacios y elegir la mejor opción bajo presión.' },
             ].map(({ Icon, title, desc }) => (
               <div key={title} className="bg-black border border-[#ff8000]/25 rounded-2xl p-6 hover:border-[#ff8000]/60 transition-colors">
                 <div className="w-14 h-14 bg-[#ff8000]/10 rounded-2xl flex items-center justify-center mb-4">
@@ -527,8 +542,145 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════════ SECCIÓN 5 — PROGRAMAS Y PRECIOS ══════════ */}
-      <section className="bg-black py-20 px-5">
+      {/* ══════════ SECCIÓN 5 — ESTRUCTURA DE LA SESIÓN ══════════ */}
+      <section id="sesion" className="bg-black py-20 px-5">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Cada clase</span>
+            <h2 className="text-4xl md:text-5xl font-black text-white mt-2 mb-4">Estructura de la sesión</h2>
+            <p className="text-[#F1F0EC]/65 text-base max-w-2xl mx-auto leading-relaxed">
+              Una hora de trabajo dividida en cuatro etapas con un propósito claro.
+            </p>
+          </div>
+          <div className="relative">
+            <div className="absolute left-7 top-4 bottom-4 w-px bg-[#ff8000]/25 hidden sm:block" />
+            <div className="space-y-5">
+              {[
+                { num: '1', title: 'Evaluación inicial',      desc: 'Rúbrica de entrada: medimos punto de partida del jugador en técnica, físico y actitud para planificar la sesión.' },
+                { num: '2', title: 'Enfoque y corrección',    desc: 'Trabajo técnico individual y por capacidades. Corregimos gestos, mejoramos el primer toque y damos feedback en cancha.' },
+                { num: '3', title: 'Desarrollo táctico',      desc: 'Ejercicios y partidos reducidos con variantes técnico-tácticas. Llevamos lo aprendido al juego real con presión y decisiones.' },
+                { num: '4', title: 'Vuelta a la calma',       desc: 'Estiramientos, hidratación y cierre. Reflexión corta sobre lo trabajado y objetivos para la siguiente clase.' },
+              ].map(({ num, title, desc }) => (
+                <div key={num} className="flex items-start gap-5">
+                  <div className="w-14 h-14 rounded-full bg-[#ff8000] flex items-center justify-center text-white font-black text-xl flex-shrink-0 z-10 shadow-lg shadow-orange-500/20">
+                    {num}
+                  </div>
+                  <div className="bg-[#1e1e70]/40 border border-white/8 rounded-2xl px-5 py-4 flex-1">
+                    <h3 className="text-white font-bold text-base mb-1">{title}</h3>
+                    <p className="text-[#F1F0EC]/60 text-sm leading-relaxed">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════ SECCIÓN 6 — ETAPAS EVOLUTIVAS ══════════ */}
+      <section id="etapas" className="bg-[#1e1e70] py-20 px-5">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Por edad</span>
+            <h2 className="text-4xl md:text-5xl font-black text-white mt-2 mb-4">Etapas evolutivas</h2>
+            <p className="text-[#F1F0EC]/65 text-base max-w-2xl mx-auto leading-relaxed">
+              Cada jugador entrena con un enfoque adecuado a su etapa de desarrollo.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            {[
+              {
+                Icon: Sprout,
+                fase: 'Fase 1',
+                rango: '7 a 10 años',
+                titulo: 'Iniciación',
+                desc: 'Primer contacto con el fútbol con método. El foco está en disfrutar, dominar el balón y formar hábitos de disciplina.',
+                bullets: [
+                  'Coordinación y motricidad con balón',
+                  'Fundamentos técnicos básicos',
+                  'Juegos reducidos y reglas del fútbol',
+                  'Valores: respeto, esfuerzo y trabajo en equipo',
+                ],
+              },
+              {
+                Icon: Award,
+                fase: 'Fase 2',
+                rango: '11 a 15 años',
+                titulo: 'Competencia',
+                desc: 'Etapa de especialización. Se profundiza la técnica, se introduce la táctica y se prepara al jugador para el rendimiento.',
+                bullets: [
+                  'Perfeccionamiento técnico por posición',
+                  'Lectura táctica y toma de decisiones',
+                  'Preparación física específica',
+                  'Mentalidad competitiva y liderazgo',
+                ],
+              },
+            ].map(({ Icon, fase, rango, titulo, desc, bullets }) => (
+              <div key={fase} className="bg-black border border-[#ff8000]/25 rounded-2xl p-7 hover:border-[#ff8000]/60 transition-colors">
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="w-14 h-14 bg-[#ff8000]/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+                    <Icon size={28} color="#ff8000" />
+                  </div>
+                  <div>
+                    <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">{fase} · {rango}</span>
+                    <h3 className="text-white font-black text-2xl mt-0.5">{titulo}</h3>
+                  </div>
+                </div>
+                <p className="text-[#F1F0EC]/70 text-sm leading-relaxed mb-5">{desc}</p>
+                <ul className="space-y-2.5">
+                  {bullets.map(b => (
+                    <li key={b} className="flex items-start gap-3 text-sm text-[#F1F0EC]/80">
+                      <Check size={16} className="text-[#ff8000] mt-0.5 flex-shrink-0" />
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════ SECCIÓN 7 — BENEFICIOS ══════════ */}
+      <section id="beneficios" className="bg-black py-20 px-5">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Por qué entrenar acá</span>
+            <h2 className="text-4xl md:text-5xl font-black text-white mt-2 mb-4">Beneficios para tu hijo</h2>
+            <p className="text-[#F1F0EC]/65 text-base max-w-2xl mx-auto leading-relaxed">
+              Más que fútbol: una formación que se nota dentro y fuera de la cancha.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              { Icon: Target,   title: 'Mejora técnica individual', desc: 'Trabajo por capacidades con seguimiento personalizado del progreso de cada jugador.' },
+              { Icon: Activity, title: 'Coordinación y agilidad',   desc: 'Movilidad, equilibrio y motricidad fina con balón para responder mejor en cancha.' },
+              { Icon: Brain,    title: 'Inteligencia táctica',      desc: 'Aprender a leer el juego, anticipar y decidir bajo presión. La diferencia entre jugar y entender.' },
+              { Icon: Heart,    title: 'Preparación física',        desc: 'Resistencia, fuerza y velocidad adaptadas a la edad. Hábitos saludables que duran toda la vida.' },
+              { Icon: Shield,   title: 'Confianza y seguridad',     desc: 'Pequeños logros entrenamiento tras entrenamiento que construyen carácter y autoestima real.' },
+              { Icon: Users,    title: 'Trabajo en equipo',         desc: 'Aprende a comunicarse, apoyar al compañero y entender que cada rol cuenta. Líderes conscientes.' },
+            ].map(({ Icon, title, desc }) => (
+              <div key={title} className="bg-[#1e1e70]/30 border border-white/8 rounded-2xl p-6 hover:border-[#ff8000]/40 transition-colors">
+                <div className="w-12 h-12 bg-[#ff8000]/15 rounded-xl flex items-center justify-center mb-4">
+                  <Icon size={24} color="#ff8000" />
+                </div>
+                <h3 className="text-white font-bold text-base mb-2">{title}</h3>
+                <p className="text-[#F1F0EC]/60 text-sm leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-12">
+            <button
+              onClick={scrollToForm}
+              className="bg-[#ff8000] text-white font-bold text-lg px-8 py-4 rounded-2xl hover:bg-orange-600 active:scale-95 transition-all shadow-xl shadow-orange-500/20"
+            >
+              Ver planes y precios →
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════ SECCIÓN 8 — PROGRAMAS Y PRECIOS ══════════ */}
+      <section id="programas" className="bg-[#1e1e70] py-20 px-5">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Precios</span>
@@ -588,8 +740,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════════ SECCIÓN 6 — LOGROS ══════════ */}
-      <section id="logros" className="bg-[#1e1e70] py-20 px-5 relative overflow-hidden">
+      {/* ══════════ SECCIÓN 9 — LOGROS ══════════ */}
+      <section id="logros" className="bg-black py-20 px-5 relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-5 pointer-events-none"
           style={{ backgroundImage: 'radial-gradient(circle, #ff8000 1px, transparent 1px)', backgroundSize: '30px 30px' }}
@@ -612,7 +764,7 @@ export default function Home() {
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0 z-10 border-2 ${champion ? 'bg-[#ff8000] border-[#ff8000]' : 'bg-[#1e1e70] border-[#ff8000]/40'}`}>
                     {emoji}
                   </div>
-                  <div className="bg-black/40 rounded-2xl px-5 py-4 flex-1">
+                  <div className="bg-[#1e1e70]/50 rounded-2xl px-5 py-4 flex-1">
                     <span className="text-[#ff8000] text-xs font-bold tracking-wider">{year}</span>
                     <p className="text-white font-bold text-base mt-0.5">{title}</p>
                   </div>
@@ -623,8 +775,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════════ SECCIÓN 7 — UBICACIÓN Y HORARIOS ══════════ */}
-      <section id="ubicacion" className="bg-black py-20 px-5">
+      {/* ══════════ SECCIÓN 10 — UBICACIÓN Y HORARIOS ══════════ */}
+      <section id="ubicacion" className="bg-[#1e1e70] py-20 px-5">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-start">
           <div className="rounded-2xl overflow-hidden border-2 border-[#ff8000]/30 shadow-2xl">
             <iframe
@@ -668,8 +820,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════════ SECCIÓN 8 — TESTIMONIOS ══════════ */}
-      <section className="bg-[#1e1e70] py-20 px-5">
+      {/* ══════════ SECCIÓN 11 — TESTIMONIOS ══════════ */}
+      <section className="bg-black py-20 px-5">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Familias</span>
@@ -677,7 +829,7 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-3 gap-5">
             {(['JR', 'MC', 'AP'] as const).map((initials, i) => (
-              <div key={i} className="bg-black/35 border border-white/8 rounded-2xl p-6">
+              <div key={i} className="bg-[#1e1e70]/40 border border-white/8 rounded-2xl p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-full bg-[#ff8000]/15 flex items-center justify-center flex-shrink-0">
                     <span className="text-[#ff8000] font-bold text-sm">{initials}</span>
@@ -697,11 +849,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════════ SECCIÓN 9 — FORMULARIO ══════════ */}
+      {/* ══════════ SECCIÓN 12 — FORMULARIO ══════════ */}
       <div
         ref={formRef}
         id="inscripcion"
-        className="bg-black py-20 px-5"
+        className="bg-[#1e1e70] py-20 px-5"
         onFocus={() => { formTouchedRef.current = true }}
       >
         <div className="max-w-lg mx-auto">
@@ -930,7 +1082,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ══════════ SECCIÓN 10 — FOOTER ══════════ */}
+      {/* ══════════ SECCIÓN 13 — FOOTER ══════════ */}
       <footer className="bg-[#0e0e4a] py-12 px-5">
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
