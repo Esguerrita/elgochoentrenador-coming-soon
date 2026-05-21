@@ -3,10 +3,10 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import {
-  Menu, X, Target, Trophy, Shield, MapPin,
+  Menu, X, Target, Shield, MapPin,
   MessageCircle, Check, Star, UserPlus,
   Send, CircleDot, Zap, Goal, Eye,
-  Sprout, Award, Brain, Heart, Activity, Users,
+  Brain, Heart, Activity, Users,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { PAISES, VE_IDX } from '@/data/paises'
@@ -201,6 +201,7 @@ export default function Home() {
   const [showFloating, setShowFloating] = useState(false)
   const [showExitPopup, setShowExitPopup] = useState(false)
 
+  const [fundamentoIdx, setFundamentoIdx] = useState(0)
   const [paso, setPaso] = useState(1)
   const [enviando, setEnviando] = useState(false)
   const [enviado, setEnviado] = useState(false)
@@ -387,124 +388,200 @@ export default function Home() {
       )}
 
       {/* ══════════ SECCIÓN 1 — HERO ══════════ */}
-      <section
-        className="relative min-h-screen flex flex-col"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1920&q=80')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-[#1e1e70]/50 to-black/95" />
+      <section className="relative overflow-hidden bg-black">
+        {/* Radial gradient background */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(circle at 15% 20%, rgba(255,128,0,0.12), transparent 45%), radial-gradient(circle at 85% 80%, rgba(30,30,112,0.55), transparent 55%), #050514',
+          }}
+        />
+        <div
+          className="absolute inset-0 opacity-[0.04] pointer-events-none"
+          style={{
+            backgroundImage: 'radial-gradient(circle, #ff8000 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+          }}
+        />
 
         <nav className="relative z-10 flex items-center justify-between px-5 pt-6 max-w-6xl mx-auto w-full">
           <div className="flex items-center gap-2.5">
             <Image src="/logo.png" alt="El Gocho Entrenador" width={40} height={40} className="object-contain" priority />
-            <span className="text-white font-bold text-sm leading-tight hidden sm:block">
-              El Gocho<br /><span className="text-[#ff8000]">Entrenador</span>
+            <span className="text-white font-bold text-sm leading-tight">
+              El Gocho<span className="text-[#ff8000]">.</span>
             </span>
           </div>
-          <button onClick={() => setMenuOpen(true)} className="text-white/60 hover:text-white" aria-label="Abrir menú">
+          <div className="hidden md:flex items-center gap-7 text-sm font-medium text-white/70">
+            <button onClick={() => scrollTo('sobre')} className="hover:text-white transition">Inicio</button>
+            <button onClick={() => scrollTo('fundamentos')} className="hover:text-white transition">Fundamentos</button>
+            <button onClick={() => scrollTo('sesion')} className="hover:text-white transition">La Sesión</button>
+            <button onClick={() => scrollTo('etapas')} className="hover:text-white transition">Etapas</button>
+            <button onClick={() => scrollTo('programas')} className="hover:text-white transition">Planes</button>
+            <a
+              href="https://www.instagram.com/elgochoentrenador"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#15154a] hover:bg-[#1e1e70] border border-white/10 text-white font-semibold px-5 py-2 rounded-full transition"
+            >
+              Seguir
+            </a>
+          </div>
+          <button onClick={() => setMenuOpen(true)} className="md:hidden text-white/70 hover:text-white" aria-label="Abrir menú">
             <Menu size={26} />
           </button>
         </nav>
 
-        <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-5 py-16">
-          <div className="max-w-3xl mx-auto">
-            <span className="inline-block text-[#ff8000] text-xs font-bold tracking-widest uppercase mb-5 border border-[#ff8000]/30 px-4 py-1.5 rounded-full">
-              Academia de fútbol · Caracas · 7 a 15 años
-            </span>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white leading-tight mb-5">
-              Formando jugadores{' '}
-              <span className="text-[#ff8000]">inteligentes,</span>
-              <br />educando líderes{' '}
-              <span className="text-[#ff8000]">conscientes</span>
-            </h1>
-            <p className="text-lg sm:text-xl text-white/65 mb-10 max-w-xl mx-auto leading-relaxed">
-              Academia de fútbol para niños de 7 a 15 años en Caracas
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={scrollToForm}
-                className="bg-[#ff8000] text-white font-bold text-lg px-8 py-4 rounded-2xl hover:bg-orange-600 active:scale-95 transition-all shadow-xl shadow-orange-500/20"
-              >
-                Inscribe a tu hijo →
-              </button>
-              <a
-                href={`${WA_BASE}?text=${encodeURIComponent('Hola, quiero una clase de prueba gratis con El Gocho Entrenador')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border-2 border-white/35 text-white font-semibold text-lg px-8 py-4 rounded-2xl hover:border-white hover:bg-white/10 active:scale-95 transition-all"
-              >
-                Clase de prueba gratis
-              </a>
+        <div className="relative z-10 max-w-6xl mx-auto px-5 pt-14 pb-20 md:pt-20 md:pb-28">
+          <div className="grid md:grid-cols-2 gap-12 md:gap-10 items-center">
+            {/* Texto */}
+            <div>
+              <span className="inline-flex items-center gap-2 text-[#ff8000] text-xs font-bold tracking-widest uppercase border border-[#ff8000]/40 px-4 py-1.5 rounded-full bg-[#ff8000]/5">
+                <span aria-hidden>⚽</span> Formación · 7 a 15 años
+              </span>
+              <h1 className="text-5xl sm:text-6xl md:text-[64px] font-black text-white leading-[1.05] mt-6">
+                Entrenamiento<br />
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{ backgroundImage: 'linear-gradient(135deg, #ffb060 0%, #ff8000 60%, #c25a00 100%)' }}
+                >
+                  con propósito.
+                </span>
+              </h1>
+              <p className="text-base md:text-lg text-white/60 mt-6 leading-relaxed max-w-md">
+                Entrena como los futbolistas que quieren destacar. Lleva tu juego al siguiente nivel con entrenamientos especializados que combinan técnica, táctica y formación humana en cada acción dentro del campo.
+              </p>
+              <div className="flex items-center gap-2 mt-6 text-white/55 text-sm">
+                <MapPin size={16} className="text-[#ff8000] flex-shrink-0" />
+                Parque Arístides Rojas, Av. Andrés Bello, Caracas
+              </div>
+              <div className="flex flex-wrap gap-3 mt-8">
+                <button
+                  onClick={scrollToForm}
+                  className="bg-[#ff8000] text-white font-bold px-6 py-3 rounded-full hover:bg-orange-600 active:scale-95 transition-all shadow-lg shadow-orange-500/20"
+                >
+                  Ver Planes y Precios
+                </button>
+                <button
+                  onClick={() => scrollTo('fundamentos')}
+                  className="bg-[#15154a] text-white font-semibold px-6 py-3 rounded-full hover:bg-[#1e1e70] active:scale-95 transition-all border border-white/10"
+                >
+                  Conocer Metodología →
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div className="relative z-10 flex justify-center pb-8">
-          <div className="w-6 h-10 rounded-full border-2 border-white/25 flex items-start justify-center pt-2">
-            <div className="w-1.5 h-3 bg-white/40 rounded-full animate-bounce" />
+            {/* Photo card */}
+            <div className="relative">
+              <div
+                className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-white/10 shadow-2xl"
+                style={{ boxShadow: '0 30px 80px -20px rgba(255,128,0,0.15), 0 0 0 1px rgba(255,255,255,0.05)' }}
+              >
+                <Image
+                  src="/coach.png"
+                  alt="Cristopher Martínez — El Gocho Entrenador"
+                  fill
+                  priority
+                  className="object-cover object-top"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                <div
+                  className="absolute inset-x-0 bottom-0 p-6 pt-20"
+                  style={{ background: 'linear-gradient(to top, rgba(5,5,20,0.95) 35%, transparent)' }}
+                >
+                  <p className="text-[#ff8000] text-[10px] font-black tracking-[0.2em] uppercase mb-3">
+                    Coach Principal
+                  </p>
+                  <div className="flex items-center gap-2 text-white">
+                    <span className="w-5 h-5 rounded-full bg-[#ff8000]/20 flex items-center justify-center flex-shrink-0">
+                      <Check size={12} className="text-[#ff8000]" />
+                    </span>
+                    <p className="font-bold text-base">Cristopher Martínez</p>
+                  </div>
+                  <p className="text-white/50 text-xs mt-1.5 ml-7">Campeón Liga Colegial 2025</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ══════════ SECCIÓN 2 — TRUST STRIP ══════════ */}
-      <section className="bg-[#1e1e70] py-14 px-5">
-        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <section className="relative bg-black border-y border-white/5 py-10 px-5">
+        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {([
             { num: 3,   suffix: '',  label: 'Años de experiencia' },
             { num: 120, suffix: '+', label: 'Niños formados' },
             { num: 4,   suffix: '',  label: 'Campeonatos ganados' },
           ] as const).map(({ num, suffix, label }) => (
             <div key={label}>
-              <p className="text-4xl md:text-5xl font-black text-[#ff8000]">
+              <p className="text-3xl md:text-4xl font-black text-[#ff8000]">
                 <AnimatedCounter value={num} suffix={suffix} />
               </p>
-              <p className="text-sm text-[#F1F0EC]/65 mt-1.5 font-medium">{label}</p>
+              <p className="text-xs md:text-sm text-white/55 mt-1.5 font-medium">{label}</p>
             </div>
           ))}
           <FadeInWhenVisible>
-            <p className="text-4xl md:text-5xl font-black text-[#ff8000]">✓</p>
-            <p className="text-sm text-[#F1F0EC]/65 mt-1.5 font-medium">Coach certificado</p>
+            <p className="text-3xl md:text-4xl font-black text-[#ff8000]">✓</p>
+            <p className="text-xs md:text-sm text-white/55 mt-1.5 font-medium">Coach certificado</p>
           </FadeInWhenVisible>
         </div>
       </section>
 
       {/* ══════════ SECCIÓN 3 — SOBRE EL COACH ══════════ */}
-      <section id="sobre" className="bg-black py-20 px-5">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-14 items-center">
+      <section id="sobre" className="relative bg-black py-24 px-5 overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none opacity-50"
+          style={{
+            background:
+              'radial-gradient(circle at 20% 50%, rgba(30,30,112,0.4), transparent 50%), radial-gradient(circle at 80% 80%, rgba(255,128,0,0.05), transparent 50%)',
+          }}
+        />
+        <div className="relative max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div className="flex justify-center">
             <div className="relative">
-              <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-[#ff8000] shadow-2xl shadow-orange-500/20">
+              <div
+                className="relative aspect-[4/5] w-72 md:w-80 rounded-3xl overflow-hidden border border-white/10"
+                style={{ boxShadow: '0 30px 80px -20px rgba(255,128,0,0.15)' }}
+              >
                 <Image
                   src="/coach.png"
                   alt="Cristopher Martínez — El Gocho Entrenador"
                   fill
                   className="object-cover object-top"
-                  sizes="(max-width: 768px) 256px, 320px"
+                  sizes="(max-width: 768px) 288px, 320px"
                 />
               </div>
-              <div className="absolute -bottom-4 -right-4 bg-[#ff8000] rounded-2xl px-4 py-2.5 shadow-xl">
+              <div className="absolute -bottom-3 -right-3 bg-[#ff8000] rounded-2xl px-4 py-2.5 shadow-xl">
                 <p className="text-white font-black text-sm">3 años</p>
                 <p className="text-white/75 text-xs">de experiencia</p>
               </div>
             </div>
           </div>
           <div>
-            <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Sobre el coach</span>
-            <h2 className="text-4xl md:text-5xl font-black text-white mt-2 mb-4">Cristopher Martínez</h2>
-            <p className="text-[#F1F0EC]/70 text-base leading-relaxed mb-4">
-              Con más de 3 años formando jugadores en Caracas, Cristopher ha entrenado a más de 120 niños entre los 7 y 15 años, ayudándolos a desarrollar no solo sus habilidades técnicas en el fútbol, sino también valores fundamentales como la disciplina, el compromiso y la resiliencia.
+            <span className="inline-block text-[#ff8000] text-[10px] font-black tracking-[0.2em] uppercase border border-[#ff8000]/40 px-3 py-1 rounded-full bg-[#ff8000]/5 mb-4">
+              Sobre el coach
+            </span>
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-5 leading-[1.05]">
+              Cristopher{' '}
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: 'linear-gradient(135deg, #ffb060, #ff8000)' }}
+              >
+                Martínez.
+              </span>
+            </h2>
+            <p className="text-white/65 text-base leading-relaxed mb-4">
+              Con más de 3 años formando jugadores en Caracas, Cristopher ha entrenado a más de 120 niños entre 7 y 15 años, ayudándolos a desarrollar no solo habilidades técnicas en el fútbol, sino también disciplina, compromiso y resiliencia.
             </p>
-            <p className="text-[#F1F0EC]/70 text-base leading-relaxed mb-6">
-              Su metodología combina técnica futbolística con formación humana integral, creando jugadores conscientes de su potencial dentro y fuera de la cancha. Campeón sub-10 y sub-12 en la Liga Colegial 2025, El Gocho Entrenador es referencia en la academia juvenil de Caracas.
+            <p className="text-white/65 text-base leading-relaxed mb-7">
+              Su metodología combina técnica con formación humana integral, creando jugadores conscientes de su potencial dentro y fuera de la cancha. Campeón sub-10 y sub-12 en la Liga Colegial 2025.
             </p>
             <a
               href={`${WA_BASE}?text=${WA_MSG}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-[#ff8000] text-white font-bold px-6 py-3.5 rounded-xl hover:bg-orange-600 active:scale-95 transition-all"
+              className="inline-flex items-center gap-2 bg-[#ff8000] text-white font-bold px-6 py-3 rounded-full hover:bg-orange-600 active:scale-95 transition-all shadow-lg shadow-orange-500/20"
             >
               <MessageCircle size={18} /> Hablar con el coach
             </a>
@@ -513,127 +590,326 @@ export default function Home() {
       </section>
 
       {/* ══════════ SECCIÓN 4 — FUNDAMENTOS TÉCNICOS ══════════ */}
-      <section id="fundamentos" className="bg-[#1e1e70] py-20 px-5">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Metodología</span>
-            <h2 className="text-4xl md:text-5xl font-black text-white mt-2 mb-4">Fundamentos técnicos</h2>
-            <p className="text-[#F1F0EC]/65 text-base max-w-2xl mx-auto leading-relaxed">
-              Cada entrenamiento se construye sobre cinco fundamentos que forman jugadores completos.
+      <section
+        id="fundamentos"
+        className="relative bg-black py-24 px-5 overflow-hidden"
+      >
+        <div
+          className="absolute inset-0 pointer-events-none opacity-60"
+          style={{
+            background:
+              'radial-gradient(circle at 80% 50%, rgba(30,30,112,0.4), transparent 50%), radial-gradient(circle at 20% 100%, rgba(255,128,0,0.06), transparent 50%)',
+          }}
+        />
+        <div className="relative max-w-5xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-4xl md:text-5xl font-black text-white">
+              Fundamentos{' '}
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: 'linear-gradient(135deg, #ffb060, #ff8000)' }}
+              >
+                Técnicos
+              </span>
+            </h2>
+            <p className="text-white/55 text-base mt-4 max-w-2xl mx-auto">
+              Selecciona un fundamento para descubrir el detalle técnico que trabajamos en cada sesión.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+          {/* Pill tabs */}
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10">
             {[
-              { Icon: Send,       title: 'Pase',             desc: 'La base del juego en equipo. Precisión, peso del balón y toma de decisiones para conectar cada acción ofensiva.' },
-              { Icon: CircleDot,  title: 'Control',          desc: 'Control orientado en espacios reducidos. Dominio del primer toque para ganar tiempo y ventaja sobre el rival.' },
-              { Icon: Zap,        title: 'Conducción',       desc: 'Velocidad, cambio de dirección y manejo del balón en carrera. Llevar el juego con criterio y agresividad.' },
-              { Icon: Goal,       title: 'Definición',       desc: 'Remate con empeine, interior y borde. Lectura del arquero, ángulos y serenidad en el área para terminar las jugadas.' },
-              { Icon: Eye,        title: 'Visión de juego',  desc: 'Leer la cancha antes de recibir. Anticipar movimientos, encontrar espacios y elegir la mejor opción bajo presión.' },
-            ].map(({ Icon, title, desc }) => (
-              <div key={title} className="bg-black border border-[#ff8000]/25 rounded-2xl p-6 hover:border-[#ff8000]/60 transition-colors">
-                <div className="w-14 h-14 bg-[#ff8000]/10 rounded-2xl flex items-center justify-center mb-4">
-                  <Icon size={28} color="#ff8000" />
+              { Icon: Send, label: 'Pase' },
+              { Icon: CircleDot, label: 'Control' },
+              { Icon: Zap, label: 'Conducción' },
+              { Icon: Goal, label: 'Definición' },
+              { Icon: Eye, label: 'Visión' },
+            ].map(({ Icon, label }, i) => {
+              const active = fundamentoIdx === i
+              return (
+                <button
+                  key={label}
+                  onClick={() => setFundamentoIdx(i)}
+                  className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
+                    active
+                      ? 'bg-[#ff8000] text-white shadow-lg shadow-orange-500/30'
+                      : 'bg-white/[0.03] text-white/65 border border-white/10 hover:border-[#ff8000]/40 hover:text-white'
+                  }`}
+                >
+                  <Icon size={15} />
+                  {label}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Detail card */}
+          {(() => {
+            const fundamentos = [
+              {
+                Icon: Send,
+                title: 'PASE',
+                subtitle: 'El lenguaje del fútbol.',
+                body: 'El pase es la base del juego en equipo. Un buen pase no solo entrega el balón, también otorga ventaja de tiempo y espacio a tu compañero.',
+                details: [
+                  'Borde interno: máxima precisión y seguridad en distancias cortas.',
+                  'Empeine: potencia y tensión para cambios de frente o envíos largos.',
+                  'Pie de apoyo: debe apuntar hacia el objetivo para direccionar correctamente.',
+                  'Peso del pase: ajustar la fuerza según la distancia y la presión rival.',
+                ],
+              },
+              {
+                Icon: CircleDot,
+                title: 'CONTROL',
+                subtitle: 'Dominar el primer toque.',
+                body: 'Control orientado en espacios reducidos. Dominar el primer toque te da el tiempo y la ventaja para tomar la mejor decisión antes de la próxima acción.',
+                details: [
+                  'Borde interno: la zona más segura para amortiguar el balón.',
+                  'Empeine y pecho: control con dirección al espacio libre.',
+                  'Cuerpo de cara al juego: ver opciones antes de recibir.',
+                  'Primer toque orientado: salir con ventaja, no quedarse quieto.',
+                ],
+              },
+              {
+                Icon: Zap,
+                title: 'CONDUCCIÓN',
+                subtitle: 'Llevar el juego en carrera.',
+                body: 'Manejo del balón en velocidad con cambios de dirección. Conducir con criterio para romper líneas, crear espacios y desequilibrar al rival.',
+                details: [
+                  'Toques cortos: control del balón pegado al pie en velocidad.',
+                  'Visión periférica: ver compañeros y rivales mientras avanzas.',
+                  'Cambio de ritmo: acelerar y frenar para desequilibrar al marcador.',
+                  'Protección del balón: cuerpo entre el balón y el rival.',
+                ],
+              },
+              {
+                Icon: Goal,
+                title: 'DEFINICIÓN',
+                subtitle: 'Convertir las oportunidades.',
+                body: 'Remate con empeine, interior o borde. Lectura del arquero, ángulos y serenidad en el área para terminar bien cada jugada generada.',
+                details: [
+                  'Pie de apoyo firme: estabilidad antes del remate.',
+                  'Mirar al arco: leer la posición del arquero antes de definir.',
+                  'Tipo de remate: ajustar técnica al ángulo y a la distancia.',
+                  'Definición fría: serenidad en la última acción.',
+                ],
+              },
+              {
+                Icon: Eye,
+                title: 'VISIÓN',
+                subtitle: 'Leer la cancha antes de recibir.',
+                body: 'Anticipar movimientos, encontrar espacios y elegir la mejor opción bajo presión. La diferencia entre jugar y entender el juego.',
+                details: [
+                  'Escanear antes de recibir: revisar el campo con la mirada.',
+                  'Anticipación: leer la jugada antes de que ocurra.',
+                  'Decisión: elegir la mejor opción en cada acción.',
+                  'Comunicación: pedir el balón y guiar al compañero.',
+                ],
+              },
+            ]
+            const f = fundamentos[fundamentoIdx]
+            const FIcon = f.Icon
+            return (
+              <div
+                className="relative rounded-3xl p-7 md:p-10 border border-white/10"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(15,15,45,0.95) 0%, rgba(10,10,30,0.9) 100%)',
+                }}
+              >
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-[#ff8000]/15 flex items-center justify-center flex-shrink-0">
+                    <FIcon size={22} className="text-[#ff8000]" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-black text-2xl tracking-wide">{f.title}</h3>
+                    <p className="text-[#ff8000] text-sm font-semibold mt-0.5">{f.subtitle}</p>
+                  </div>
                 </div>
-                <h3 className="text-white font-bold text-lg mb-2">{title}</h3>
-                <p className="text-[#F1F0EC]/60 text-sm leading-relaxed">{desc}</p>
+                <p className="text-white/70 text-base leading-relaxed mb-7 max-w-3xl">{f.body}</p>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {f.details.map((d) => (
+                    <div
+                      key={d}
+                      className="flex items-start gap-3 bg-black/40 border border-white/8 rounded-xl px-4 py-3"
+                    >
+                      <Check size={16} className="text-[#ff8000] mt-0.5 flex-shrink-0" />
+                      <p className="text-white/75 text-sm leading-relaxed">{d}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })()}
+        </div>
+      </section>
+
+      {/* ══════════ SECCIÓN 5 — ESTRUCTURA DE LA SESIÓN ══════════ */}
+      <section
+        id="sesion"
+        className="relative bg-black py-24 px-5 overflow-hidden"
+      >
+        <div
+          className="absolute inset-0 pointer-events-none opacity-50"
+          style={{
+            background:
+              'radial-gradient(circle at 50% 100%, rgba(30,30,112,0.45), transparent 60%), radial-gradient(circle at 90% 0%, rgba(255,128,0,0.05), transparent 50%)',
+          }}
+        />
+        <div className="relative max-w-6xl mx-auto">
+          <div className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-black text-white">
+              Estructura de la{' '}
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: 'linear-gradient(135deg, #ffb060, #ff8000)' }}
+              >
+                Sesión
+              </span>
+            </h2>
+            <p className="text-white/55 text-base mt-4 max-w-2xl mx-auto">
+              Cada entrenamiento dura 1 hora, estructurada estratégicamente para maximizar el aprendizaje y el rendimiento.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              { Icon: Target,    roman: 'I',   num: '1', title: 'Evaluación',           desc: 'Evaluación inicial a través de rúbrica fundamentada para conocer el nivel actual del jugador.' },
+              { Icon: Activity,  roman: 'II',  num: '2', title: 'Enfoque & Corrección', desc: 'Trabajo post-evaluación, correcciones y perfeccionamiento de fundamentos técnicos y capacidades físicas básicas.' },
+              { Icon: Zap,       roman: 'III', num: '3', title: 'Desarrollo Táctico',   desc: 'Corregir errores y buscar variantes técnico-tácticas para desarrollar un deportista más ligero y eficaz.' },
+              { Icon: CircleDot, roman: 'IV',  num: '4', title: 'Vuelta a la Calma',    desc: 'Disminución de la intensidad, estiramientos y finalización de la sesión deportiva.' },
+            ].map(({ Icon, roman, num, title, desc }) => (
+              <div
+                key={num}
+                className="relative rounded-3xl p-6 border border-white/10 overflow-hidden group hover:border-[#ff8000]/40 transition-colors"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(15,15,45,0.7) 0%, rgba(10,10,30,0.6) 100%)',
+                }}
+              >
+                <span
+                  className="absolute top-2 right-4 font-black text-[110px] leading-none pointer-events-none select-none"
+                  style={{ color: 'rgba(255,255,255,0.04)' }}
+                  aria-hidden
+                >
+                  {num}
+                </span>
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-xl bg-[#ff8000]/15 flex items-center justify-center mb-12">
+                    <Icon size={22} className="text-[#ff8000]" />
+                  </div>
+                  <p className="text-white/45 text-xs font-bold tracking-widest uppercase mb-1">
+                    Etapa {roman}
+                  </p>
+                  <h3 className="text-white font-bold text-lg mb-2">{title}</h3>
+                  <p className="text-white/55 text-sm leading-relaxed">{desc}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══════════ SECCIÓN 5 — ESTRUCTURA DE LA SESIÓN ══════════ */}
-      <section id="sesion" className="bg-black py-20 px-5">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Cada clase</span>
-            <h2 className="text-4xl md:text-5xl font-black text-white mt-2 mb-4">Estructura de la sesión</h2>
-            <p className="text-[#F1F0EC]/65 text-base max-w-2xl mx-auto leading-relaxed">
-              Una hora de trabajo dividida en cuatro etapas con un propósito claro.
-            </p>
-          </div>
-          <div className="relative">
-            <div className="absolute left-7 top-4 bottom-4 w-px bg-[#ff8000]/25 hidden sm:block" />
-            <div className="space-y-5">
-              {[
-                { num: '1', title: 'Evaluación inicial',      desc: 'Rúbrica de entrada: medimos punto de partida del jugador en técnica, físico y actitud para planificar la sesión.' },
-                { num: '2', title: 'Enfoque y corrección',    desc: 'Trabajo técnico individual y por capacidades. Corregimos gestos, mejoramos el primer toque y damos feedback en cancha.' },
-                { num: '3', title: 'Desarrollo táctico',      desc: 'Ejercicios y partidos reducidos con variantes técnico-tácticas. Llevamos lo aprendido al juego real con presión y decisiones.' },
-                { num: '4', title: 'Vuelta a la calma',       desc: 'Estiramientos, hidratación y cierre. Reflexión corta sobre lo trabajado y objetivos para la siguiente clase.' },
-              ].map(({ num, title, desc }) => (
-                <div key={num} className="flex items-start gap-5">
-                  <div className="w-14 h-14 rounded-full bg-[#ff8000] flex items-center justify-center text-white font-black text-xl flex-shrink-0 z-10 shadow-lg shadow-orange-500/20">
-                    {num}
-                  </div>
-                  <div className="bg-[#1e1e70]/40 border border-white/8 rounded-2xl px-5 py-4 flex-1">
-                    <h3 className="text-white font-bold text-base mb-1">{title}</h3>
-                    <p className="text-[#F1F0EC]/60 text-sm leading-relaxed">{desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ══════════ SECCIÓN 6 — ETAPAS EVOLUTIVAS ══════════ */}
-      <section id="etapas" className="bg-[#1e1e70] py-20 px-5">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Por edad</span>
-            <h2 className="text-4xl md:text-5xl font-black text-white mt-2 mb-4">Etapas evolutivas</h2>
-            <p className="text-[#F1F0EC]/65 text-base max-w-2xl mx-auto leading-relaxed">
-              Cada jugador entrena con un enfoque adecuado a su etapa de desarrollo.
+      <section
+        id="etapas"
+        className="relative bg-black py-24 px-5 overflow-hidden"
+      >
+        <div
+          className="absolute inset-0 pointer-events-none opacity-50"
+          style={{
+            background:
+              'radial-gradient(circle at 10% 50%, rgba(30,30,112,0.4), transparent 50%), radial-gradient(circle at 90% 90%, rgba(255,128,0,0.06), transparent 50%)',
+          }}
+        />
+        <div className="relative max-w-6xl mx-auto">
+          <div className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-black text-white">
+              Etapas{' '}
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: 'linear-gradient(135deg, #ffb060, #ff8000)' }}
+              >
+                Evolutivas
+              </span>
+            </h2>
+            <p className="text-white/55 text-base mt-4 max-w-2xl mx-auto">
+              Adaptamos las cargas, la intensidad y el enfoque técnico a la edad biológica y nivel de cada jugador.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 gap-6">
+
+          <div className="space-y-5">
             {[
               {
-                Icon: Sprout,
-                fase: 'Fase 1',
-                rango: '7 a 10 años',
+                fase: 'FASE 1',
                 titulo: 'Iniciación',
-                desc: 'Primer contacto con el fútbol con método. El foco está en disfrutar, dominar el balón y formar hábitos de disciplina.',
+                edadGlobal: 'De 7 a 10 años (Iniciación y Formación Base)',
                 bullets: [
-                  'Coordinación y motricidad con balón',
-                  'Fundamentos técnicos básicos',
-                  'Juegos reducidos y reglas del fútbol',
-                  'Valores: respeto, esfuerzo y trabajo en equipo',
+                  'Formación en valores y hábitos saludables.',
+                  'Nociones técnicas individuales y colectivas.',
+                  'Coordinación, equilibrio y agilidad.',
+                ],
+                subgrupos: [
+                  { titulo: '7-8 años (Formación Base)', desc: 'Fase sensible de coordinación. Aprendizaje motor rápido. Conocimiento del propio cuerpo y juegos con balón.' },
+                  { titulo: '9-10 años', desc: 'Máxima capacidad de aprendizaje motor. Velocidad latente. Iniciación al fútbol 5 y fútbol 7.' },
                 ],
               },
               {
-                Icon: Award,
-                fase: 'Fase 2',
-                rango: '11 a 15 años',
+                fase: 'FASE 2',
                 titulo: 'Competencia',
-                desc: 'Etapa de especialización. Se profundiza la técnica, se introduce la táctica y se prepara al jugador para el rendimiento.',
+                edadGlobal: 'De 11 a 15 años (Especialización y Perfeccionamiento)',
                 bullets: [
-                  'Perfeccionamiento técnico por posición',
-                  'Lectura táctica y toma de decisiones',
-                  'Preparación física específica',
-                  'Mentalidad competitiva y liderazgo',
+                  'Psicología del jugador y trabajo en equipo.',
+                  'Desarrollo de fuerza, velocidad y resistencia.',
+                  'Técnica colectiva y táctica adaptada al juego.',
+                ],
+                subgrupos: [
+                  { titulo: '11-13 años (Especialización)', desc: 'Búsqueda de capacidades físicas. Introducción a trabajos de fuerza y resistencia aeróbica.' },
+                  { titulo: '14-15 años (Perfeccionamiento)', desc: 'Entrenamiento específico individualizado. Altos niveles para el jugador según su posición.' },
                 ],
               },
-            ].map(({ Icon, fase, rango, titulo, desc, bullets }) => (
-              <div key={fase} className="bg-black border border-[#ff8000]/25 rounded-2xl p-7 hover:border-[#ff8000]/60 transition-colors">
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="w-14 h-14 bg-[#ff8000]/10 rounded-2xl flex items-center justify-center flex-shrink-0">
-                    <Icon size={28} color="#ff8000" />
-                  </div>
+            ].map(({ fase, titulo, edadGlobal, bullets, subgrupos }) => (
+              <div
+                key={fase}
+                className="rounded-3xl border border-white/10 p-6 md:p-8"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(15,15,45,0.7) 0%, rgba(10,10,30,0.6) 100%)',
+                }}
+              >
+                <div className="grid md:grid-cols-3 gap-6 md:gap-8 items-start">
+                  {/* Left: info */}
                   <div>
-                    <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">{fase} · {rango}</span>
-                    <h3 className="text-white font-black text-2xl mt-0.5">{titulo}</h3>
+                    <span className="inline-block text-[#ff8000] text-[10px] font-black tracking-[0.2em] uppercase border border-[#ff8000]/40 px-3 py-1 rounded-full bg-[#ff8000]/5 mb-4">
+                      {fase}
+                    </span>
+                    <h3 className="text-white font-black text-3xl mb-1">{titulo}</h3>
+                    <p className="text-white/45 text-xs mb-5">{edadGlobal}</p>
+                    <ul className="space-y-2.5">
+                      {bullets.map((b) => (
+                        <li key={b} className="flex items-start gap-2.5 text-sm text-white/75">
+                          <span className="w-4 h-4 rounded-full border border-[#ff8000]/50 flex items-center justify-center mt-0.5 flex-shrink-0">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#ff8000]" />
+                          </span>
+                          {b}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Right: subgrupos */}
+                  <div className="md:col-span-2 grid sm:grid-cols-2 gap-3">
+                    {subgrupos.map((s) => (
+                      <div
+                        key={s.titulo}
+                        className="bg-black/40 border border-white/8 rounded-2xl p-5"
+                      >
+                        <h4 className="text-white font-bold text-sm mb-2">{s.titulo}</h4>
+                        <p className="text-white/55 text-xs leading-relaxed">{s.desc}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <p className="text-[#F1F0EC]/70 text-sm leading-relaxed mb-5">{desc}</p>
-                <ul className="space-y-2.5">
-                  {bullets.map(b => (
-                    <li key={b} className="flex items-start gap-3 text-sm text-[#F1F0EC]/80">
-                      <Check size={16} className="text-[#ff8000] mt-0.5 flex-shrink-0" />
-                      {b}
-                    </li>
-                  ))}
-                </ul>
               </div>
             ))}
           </div>
@@ -641,119 +917,224 @@ export default function Home() {
       </section>
 
       {/* ══════════ SECCIÓN 7 — BENEFICIOS ══════════ */}
-      <section id="beneficios" className="bg-black py-20 px-5">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Por qué entrenar acá</span>
-            <h2 className="text-4xl md:text-5xl font-black text-white mt-2 mb-4">Beneficios para tu hijo</h2>
-            <p className="text-[#F1F0EC]/65 text-base max-w-2xl mx-auto leading-relaxed">
-              Más que fútbol: una formación que se nota dentro y fuera de la cancha.
+      <section
+        id="beneficios"
+        className="relative bg-black py-24 px-5 overflow-hidden"
+      >
+        <div
+          className="absolute inset-0 pointer-events-none opacity-50"
+          style={{
+            background:
+              'radial-gradient(circle at 70% 30%, rgba(30,30,112,0.45), transparent 50%), radial-gradient(circle at 20% 80%, rgba(255,128,0,0.05), transparent 50%)',
+          }}
+        />
+        <div className="relative max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-black text-white">
+              ¿Por qué entrenar con{' '}
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: 'linear-gradient(135deg, #ffb060, #ff8000)' }}
+              >
+                El Gocho?
+              </span>
+            </h2>
+            <p className="text-white/55 text-base mt-4 max-w-2xl mx-auto leading-relaxed">
+              Entrenar con la metodología del Gocho te permitirá desarrollar habilidades fundamentales para mejorar tu rendimiento dentro del campo. Nuestro entrenamiento está diseñado para potenciar al futbolista de manera integral.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { Icon: Target,   title: 'Mejora técnica individual', desc: 'Trabajo por capacidades con seguimiento personalizado del progreso de cada jugador.' },
-              { Icon: Activity, title: 'Coordinación y agilidad',   desc: 'Movilidad, equilibrio y motricidad fina con balón para responder mejor en cancha.' },
-              { Icon: Brain,    title: 'Inteligencia táctica',      desc: 'Aprender a leer el juego, anticipar y decidir bajo presión. La diferencia entre jugar y entender.' },
-              { Icon: Heart,    title: 'Preparación física',        desc: 'Resistencia, fuerza y velocidad adaptadas a la edad. Hábitos saludables que duran toda la vida.' },
-              { Icon: Shield,   title: 'Confianza y seguridad',     desc: 'Pequeños logros entrenamiento tras entrenamiento que construyen carácter y autoestima real.' },
-              { Icon: Users,    title: 'Trabajo en equipo',         desc: 'Aprende a comunicarse, apoyar al compañero y entender que cada rol cuenta. Líderes conscientes.' },
-            ].map(({ Icon, title, desc }) => (
-              <div key={title} className="bg-[#1e1e70]/30 border border-white/8 rounded-2xl p-6 hover:border-[#ff8000]/40 transition-colors">
-                <div className="w-12 h-12 bg-[#ff8000]/15 rounded-xl flex items-center justify-center mb-4">
-                  <Icon size={24} color="#ff8000" />
+              { Icon: Target,   title: 'Mejora de la técnica individual',  desc: 'Perfeccionamos el control del balón, conducción, pase y finalización para que el jugador se sienta más seguro en cada acción del juego.', tint: 'from-[#ff8000]/25 to-[#ff8000]/5' },
+              { Icon: Zap,      title: 'Mayor coordinación y agilidad',    desc: 'Trabajamos ejercicios específicos que ayudan a mejorar los movimientos, cambios de dirección y la velocidad de reacción.', tint: 'from-amber-500/25 to-amber-500/5' },
+              { Icon: Brain,    title: 'Desarrollo de la inteligencia táctica', desc: 'Los jugadores aprenden a tomar mejores decisiones dentro del campo y a entender mejor el juego.', tint: 'from-fuchsia-500/25 to-fuchsia-500/5' },
+              { Icon: Heart,    title: 'Preparación física específica para fútbol', desc: 'Entrenamientos enfocados en mejorar resistencia, equilibrio, fuerza y explosividad adaptada al fútbol.', tint: 'from-rose-500/25 to-rose-500/5' },
+              { Icon: Shield,   title: 'Más confianza y seguridad en el juego', desc: 'Al mejorar sus habilidades, los jugadores se sienten más preparados para competir y enfrentar nuevos desafíos.', tint: 'from-emerald-500/25 to-emerald-500/5' },
+              { Icon: Users,    title: 'Trabajo en equipo y liderazgo',    desc: 'Aprende a comunicarse, apoyar al compañero y entender que cada rol cuenta. Líderes conscientes dentro y fuera de la cancha.', tint: 'from-sky-500/25 to-sky-500/5' },
+            ].map(({ Icon, title, desc, tint }) => (
+              <div
+                key={title}
+                className="rounded-2xl border border-white/8 p-6 hover:border-[#ff8000]/40 transition-colors"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(15,15,45,0.6) 0%, rgba(10,10,30,0.5) 100%)',
+                }}
+              >
+                <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${tint} flex items-center justify-center mb-4 border border-white/10`}>
+                  <Icon size={20} className="text-[#ff8000]" />
                 </div>
-                <h3 className="text-white font-bold text-base mb-2">{title}</h3>
-                <p className="text-[#F1F0EC]/60 text-sm leading-relaxed">{desc}</p>
+                <h3 className="text-white font-bold text-base mb-2 leading-snug">{title}</h3>
+                <p className="text-white/55 text-sm leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
-          <div className="text-center mt-12">
+
+          {/* CTA card */}
+          <div
+            className="mt-8 rounded-3xl border border-[#ff8000]/25 p-6 md:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-5"
+            style={{
+              background:
+                'linear-gradient(135deg, rgba(255,128,0,0.10) 0%, rgba(15,15,45,0.7) 60%)',
+            }}
+          >
+            <div>
+              <p className="text-white font-bold text-lg md:text-xl flex items-start md:items-center gap-2">
+                <span aria-hidden>⚽</span> ¿Quieres mejorar tu juego y llevar tu rendimiento al siguiente nivel?
+              </p>
+              <p className="text-[#ff8000] font-semibold text-sm mt-1">
+                Este es tu lugar. Únete a la metodología del Gocho.
+              </p>
+            </div>
             <button
               onClick={scrollToForm}
-              className="bg-[#ff8000] text-white font-bold text-lg px-8 py-4 rounded-2xl hover:bg-orange-600 active:scale-95 transition-all shadow-xl shadow-orange-500/20"
+              className="flex-shrink-0 bg-[#ff8000] text-white font-bold px-6 py-3 rounded-full hover:bg-orange-600 active:scale-95 transition-all shadow-lg shadow-orange-500/20 whitespace-nowrap"
             >
-              Ver planes y precios →
+              Ver Planes y Precios
             </button>
           </div>
         </div>
       </section>
 
       {/* ══════════ SECCIÓN 8 — PROGRAMAS Y PRECIOS ══════════ */}
-      <section id="programas" className="bg-[#1e1e70] py-20 px-5">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Precios</span>
-            <h2 className="text-4xl md:text-5xl font-black text-white mt-2">Nuestros programas</h2>
+      <section id="programas" className="relative bg-black py-24 px-5 overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none opacity-50"
+          style={{
+            background:
+              'radial-gradient(circle at 80% 30%, rgba(30,30,112,0.45), transparent 50%), radial-gradient(circle at 20% 90%, rgba(255,128,0,0.06), transparent 50%)',
+          }}
+        />
+        <div className="relative max-w-4xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-4xl md:text-5xl font-black text-white">
+              Planes de{' '}
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: 'linear-gradient(135deg, #ffb060, #ff8000)' }}
+              >
+                Entrenamiento
+              </span>
+            </h2>
+            <p className="text-white/55 text-base mt-4 max-w-2xl mx-auto">
+              Elige el plan que mejor se adapte a tus objetivos. Horarios a elección según disponibilidad.{' '}
+              <span className="text-white font-semibold">Duración por sesión: 1 hora.</span>
+            </p>
+            <span className="inline-block mt-5 text-[#ff8000] text-xs font-bold tracking-widest uppercase border border-[#ff8000]/40 px-4 py-1.5 rounded-full bg-[#ff8000]/5">
+              Pago por paquete · sin mensualidad
+            </span>
           </div>
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div className="relative bg-[#1e1e70]/30 border-2 border-[#ff8000] rounded-2xl p-7">
-              <div className="absolute -top-3.5 left-6 bg-[#ff8000] text-white text-xs font-black px-3 py-1 rounded-full tracking-wider uppercase">
+
+          <div className="grid md:grid-cols-2 gap-5">
+            {/* Card 1 — Grupal */}
+            <div
+              className="relative rounded-3xl p-7 border-2 border-[#ff8000]/50"
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(255,128,0,0.08) 0%, rgba(15,15,45,0.7) 60%)',
+              }}
+            >
+              <div className="absolute -top-3 left-6 bg-[#ff8000] text-white text-[10px] font-black px-3 py-1 rounded-full tracking-widest uppercase">
                 Más popular
               </div>
-              <h3 className="text-white font-black text-2xl mt-2 mb-1">Entrenamiento Grupal</h3>
-              <div className="flex items-baseline gap-1 mb-6">
-                <span className="text-[#ff8000] text-5xl font-black">$40</span>
-                <span className="text-white/40 text-sm ml-1">/ 5 clases</span>
-              </div>
-              <ul className="space-y-3 mb-7">
-                {['Entrenamiento en cancha', 'Grupos pequeños (máx 6 jugadores)', 'Evaluación continua de rendimiento', 'Horarios Vie / Sáb / Dom'].map(b => (
-                  <li key={b} className="flex items-start gap-3 text-sm text-[#F1F0EC]/80">
-                    <Check size={16} className="text-[#ff8000] mt-0.5 flex-shrink-0" />
-                    {b}
-                  </li>
+              <h3 className="text-white font-black text-2xl mt-2">Entrenamiento Grupal</h3>
+              <p className="text-[#ff8000] text-sm font-semibold mt-1 mb-6">Coach Cristopher Martínez</p>
+              <div className="space-y-2.5 mb-7">
+                {[
+                  { left: 'Pago único · 5 clases', right: '$40' },
+                  { left: 'Por sesión', right: '$8' },
+                  { left: 'Máx. 6 jugadores · Vie/Sáb/Dom', right: '1 h' },
+                ].map(({ left, right }) => (
+                  <div
+                    key={left}
+                    className="flex items-center justify-between bg-black/40 border border-white/8 rounded-xl px-4 py-3"
+                  >
+                    <p className="text-white/75 text-sm">{left}</p>
+                    <p className="text-white font-bold text-sm whitespace-nowrap">{right}</p>
+                  </div>
                 ))}
-              </ul>
-              <button onClick={scrollToForm} className="w-full bg-[#ff8000] text-white font-bold py-3.5 rounded-xl hover:bg-orange-600 active:scale-95 transition-all">
+              </div>
+              <button
+                onClick={scrollToForm}
+                className="w-full bg-[#ff8000] text-white font-bold py-3 rounded-full hover:bg-orange-600 active:scale-95 transition-all shadow-lg shadow-orange-500/20"
+              >
                 Inscribirme →
               </button>
             </div>
-            <div className="bg-white/4 border border-white/15 rounded-2xl p-7">
-              <h3 className="text-white font-black text-2xl mb-1">Entrenamiento Personalizado</h3>
-              <div className="mb-6">
-                <span className="text-[#ff8000] text-2xl font-black">Consultar precio</span>
-              </div>
-              <ul className="space-y-3 mb-7">
-                {['Clases individuales', 'En tu espacio o el de tu familia', '1 hora de trabajo completa', 'Plan personalizado según objetivos'].map(b => (
-                  <li key={b} className="flex items-start gap-3 text-sm text-[#F1F0EC]/80">
-                    <Check size={16} className="text-white/35 mt-0.5 flex-shrink-0" />
-                    {b}
-                  </li>
+
+            {/* Card 2 — Personalizado */}
+            <div
+              className="rounded-3xl p-7 border border-white/10"
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(15,15,45,0.7) 0%, rgba(10,10,30,0.6) 100%)',
+              }}
+            >
+              <h3 className="text-white font-black text-2xl mt-2">Entrenamiento Personalizado</h3>
+              <p className="text-[#ff8000] text-sm font-semibold mt-1 mb-6">Coach Cristopher Martínez</p>
+              <div className="space-y-2.5 mb-7">
+                {[
+                  { left: 'Clase individual · 1 hora', right: 'Consultar' },
+                  { left: 'En tu espacio o el del coach', right: '✓' },
+                  { left: 'Plan según objetivos', right: '✓' },
+                ].map(({ left, right }) => (
+                  <div
+                    key={left}
+                    className="flex items-center justify-between bg-black/40 border border-white/8 rounded-xl px-4 py-3"
+                  >
+                    <p className="text-white/75 text-sm">{left}</p>
+                    <p className="text-white font-bold text-sm whitespace-nowrap">{right}</p>
+                  </div>
                 ))}
-              </ul>
+              </div>
               <a
                 href={`${WA_BASE}?text=${encodeURIComponent('Hola, me interesa el entrenamiento personalizado de El Gocho Entrenador')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full block text-center border-2 border-white/30 text-white font-bold py-3.5 rounded-xl hover:border-white/60 hover:bg-white/5 transition"
+                className="block w-full text-center bg-[#15154a] text-white font-bold py-3 rounded-full hover:bg-[#1e1e70] active:scale-95 transition-all border border-white/10"
               >
                 Consultar por WhatsApp
               </a>
             </div>
           </div>
-          <div className="text-center">
-            <p className="text-[#F1F0EC]/40 text-sm">
-              Métodos de pago:{' '}
-              <span className="text-[#F1F0EC]/70 font-medium">Efectivo · Pagomóvil · Binance Pay · Transferencia · Bs</span>
-            </p>
-          </div>
+
+          <p className="text-white/40 text-sm text-center mt-8">
+            Métodos de pago:{' '}
+            <span className="text-white/70 font-medium">Efectivo · Pagomóvil · Binance Pay · Transferencia · Bs</span>
+          </p>
         </div>
       </section>
 
       {/* ══════════ SECCIÓN 9 — LOGROS ══════════ */}
-      <section id="logros" className="bg-black py-20 px-5 relative overflow-hidden">
+      <section id="logros" className="relative bg-black py-24 px-5 overflow-hidden">
         <div
-          className="absolute inset-0 opacity-5 pointer-events-none"
+          className="absolute inset-0 pointer-events-none opacity-50"
+          style={{
+            background:
+              'radial-gradient(circle at 30% 20%, rgba(30,30,112,0.4), transparent 50%), radial-gradient(circle at 70% 90%, rgba(255,128,0,0.06), transparent 50%)',
+          }}
+        />
+        <div
+          className="absolute inset-0 opacity-[0.04] pointer-events-none"
           style={{ backgroundImage: 'radial-gradient(circle, #ff8000 1px, transparent 1px)', backgroundSize: '30px 30px' }}
         />
         <div className="relative max-w-2xl mx-auto">
           <div className="text-center mb-12">
-            <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Palmarés</span>
-            <h2 className="text-4xl md:text-5xl font-black text-white mt-2">Resultados que hablan</h2>
+            <h2 className="text-4xl md:text-5xl font-black text-white">
+              Resultados que{' '}
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: 'linear-gradient(135deg, #ffb060, #ff8000)' }}
+              >
+                hablan.
+              </span>
+            </h2>
+            <p className="text-white/55 text-base mt-4">
+              Tres años de palmarés acumulado en las principales ligas juveniles de Caracas.
+            </p>
           </div>
           <div className="relative">
             <div className="absolute left-6 top-4 bottom-4 w-px bg-[#ff8000]/25" />
-            <div className="space-y-6">
+            <div className="space-y-4">
               {[
                 { year: '2025', emoji: '🏆', title: 'Campeón sub-10 Liga Colegial', champion: true },
                 { year: '2025', emoji: '🏆', title: 'Campeón sub-12 Liga Colegial', champion: true },
@@ -764,7 +1145,13 @@ export default function Home() {
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0 z-10 border-2 ${champion ? 'bg-[#ff8000] border-[#ff8000]' : 'bg-[#1e1e70] border-[#ff8000]/40'}`}>
                     {emoji}
                   </div>
-                  <div className="bg-[#1e1e70]/50 rounded-2xl px-5 py-4 flex-1">
+                  <div
+                    className="rounded-2xl px-5 py-4 flex-1 border border-white/10"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(15,15,45,0.7) 0%, rgba(10,10,30,0.5) 100%)',
+                    }}
+                  >
                     <span className="text-[#ff8000] text-xs font-bold tracking-wider">{year}</span>
                     <p className="text-white font-bold text-base mt-0.5">{title}</p>
                   </div>
@@ -776,60 +1163,111 @@ export default function Home() {
       </section>
 
       {/* ══════════ SECCIÓN 10 — UBICACIÓN Y HORARIOS ══════════ */}
-      <section id="ubicacion" className="bg-[#1e1e70] py-20 px-5">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-start">
-          <div className="rounded-2xl overflow-hidden border-2 border-[#ff8000]/30 shadow-2xl">
-            <iframe
-              src="https://maps.google.com/maps?q=Parque+Aristides+Rojas+Avenida+Andres+Bello+Caracas+Venezuela&output=embed&z=16"
-              width="100%"
-              height="320"
-              style={{ border: 0, display: 'block' }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Ubicación El Gocho Entrenador"
-            />
+      <section id="ubicacion" className="relative bg-black py-24 px-5 overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none opacity-50"
+          style={{
+            background:
+              'radial-gradient(circle at 70% 30%, rgba(30,30,112,0.45), transparent 50%), radial-gradient(circle at 10% 80%, rgba(255,128,0,0.05), transparent 50%)',
+          }}
+        />
+        <div className="relative max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-black text-white">
+              Dónde{' '}
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: 'linear-gradient(135deg, #ffb060, #ff8000)' }}
+              >
+                entrenamos.
+              </span>
+            </h2>
+            <p className="text-white/55 text-base mt-4 max-w-2xl mx-auto">
+              Cancha al aire libre en el corazón de Caracas. Cupos limitados por turno para garantizar atención personalizada.
+            </p>
           </div>
-          <div>
-            <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Dónde entrenar</span>
-            <h2 className="text-3xl md:text-4xl font-black text-white mt-2 mb-5">Ubicación y horarios</h2>
-            <div className="flex items-start gap-3 mb-7">
-              <MapPin size={20} className="text-[#ff8000] mt-0.5 flex-shrink-0" />
-              <p className="text-[#F1F0EC]/70 text-sm leading-relaxed">
-                Parque Arístides Rojas, Av. Andrés Bello,<br />
-                frente a la Hermandad Gallega, Caracas
-              </p>
+          <div className="grid md:grid-cols-2 gap-6 items-stretch">
+            <div className="rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+              <iframe
+                src="https://maps.google.com/maps?q=Parque+Aristides+Rojas+Avenida+Andres+Bello+Caracas+Venezuela&output=embed&z=16"
+                width="100%"
+                height="100%"
+                style={{ border: 0, display: 'block', minHeight: '360px' }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Ubicación El Gocho Entrenador"
+              />
             </div>
-            <h3 className="text-white font-bold text-base mb-3">Horarios disponibles</h3>
-            <div className="space-y-2.5">
-              {DIAS.map(dia => (
-                <div key={dia} className="bg-white/5 rounded-xl px-4 py-3">
-                  <p className="text-[#ff8000] font-bold text-sm mb-2">{dia}</p>
-                  <div className="flex gap-2 flex-wrap">
-                    {HORAS.map(hora => (
-                      <span key={hora} className="bg-[#ff8000]/15 text-[#ff8000] text-xs font-semibold px-3 py-1 rounded-full">
-                        {hora}
-                      </span>
-                    ))}
+            <div
+              className="rounded-3xl border border-white/10 p-7"
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(15,15,45,0.7) 0%, rgba(10,10,30,0.6) 100%)',
+              }}
+            >
+              <div className="flex items-start gap-3 mb-6 pb-6 border-b border-white/10">
+                <MapPin size={20} className="text-[#ff8000] mt-0.5 flex-shrink-0" />
+                <p className="text-white/75 text-sm leading-relaxed">
+                  Parque Arístides Rojas, Av. Andrés Bello,<br />
+                  frente a la Hermandad Gallega, Caracas
+                </p>
+              </div>
+              <h3 className="text-white font-bold text-base mb-4">Horarios disponibles</h3>
+              <div className="space-y-2.5">
+                {DIAS.map(dia => (
+                  <div key={dia} className="bg-black/30 border border-white/8 rounded-xl px-4 py-3">
+                    <p className="text-[#ff8000] font-bold text-sm mb-2">{dia}</p>
+                    <div className="flex gap-2 flex-wrap">
+                      {HORAS.map(hora => (
+                        <span key={hora} className="bg-[#ff8000]/15 text-[#ff8000] text-xs font-semibold px-3 py-1 rounded-full">
+                          {hora}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              <p className="text-white/40 text-xs mt-4">Máximo 6 jugadores por turno</p>
             </div>
-            <p className="text-[#F1F0EC]/35 text-xs mt-3">Máximo 6 jugadores por turno</p>
           </div>
         </div>
       </section>
 
       {/* ══════════ SECCIÓN 11 — TESTIMONIOS ══════════ */}
-      <section className="bg-black py-20 px-5">
-        <div className="max-w-5xl mx-auto">
+      <section className="relative bg-black py-24 px-5 overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none opacity-50"
+          style={{
+            background:
+              'radial-gradient(circle at 20% 30%, rgba(30,30,112,0.4), transparent 50%), radial-gradient(circle at 80% 80%, rgba(255,128,0,0.05), transparent 50%)',
+          }}
+        />
+        <div className="relative max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Familias</span>
-            <h2 className="text-4xl md:text-5xl font-black text-white mt-2">Lo que dicen las familias</h2>
+            <h2 className="text-4xl md:text-5xl font-black text-white">
+              Lo que dicen las{' '}
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: 'linear-gradient(135deg, #ffb060, #ff8000)' }}
+              >
+                familias.
+              </span>
+            </h2>
+            <p className="text-white/55 text-base mt-4 max-w-2xl mx-auto">
+              Voces reales de quienes ya forman parte del equipo.
+            </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-3 gap-4">
             {(['JR', 'MC', 'AP'] as const).map((initials, i) => (
-              <div key={i} className="bg-[#1e1e70]/40 border border-white/8 rounded-2xl p-6">
+              <div
+                key={i}
+                className="rounded-2xl border border-white/8 p-6"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(15,15,45,0.6) 0%, rgba(10,10,30,0.5) 100%)',
+                }}
+              >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-full bg-[#ff8000]/15 flex items-center justify-center flex-shrink-0">
                     <span className="text-[#ff8000] font-bold text-sm">{initials}</span>
@@ -840,7 +1278,7 @@ export default function Home() {
                     ))}
                   </div>
                 </div>
-                <p className="text-[#F1F0EC]/35 text-sm italic leading-relaxed">
+                <p className="text-white/35 text-sm italic leading-relaxed">
                   Próximamente testimonios reales de nuestras familias
                 </p>
               </div>
@@ -853,40 +1291,64 @@ export default function Home() {
       <div
         ref={formRef}
         id="inscripcion"
-        className="bg-[#1e1e70] py-20 px-5"
+        className="relative bg-black py-24 px-5 overflow-hidden"
         onFocus={() => { formTouchedRef.current = true }}
       >
-        <div className="max-w-lg mx-auto">
+        <div
+          className="absolute inset-0 pointer-events-none opacity-50"
+          style={{
+            background:
+              'radial-gradient(circle at 50% 0%, rgba(30,30,112,0.5), transparent 60%), radial-gradient(circle at 80% 100%, rgba(255,128,0,0.06), transparent 50%)',
+          }}
+        />
+        <div className="relative max-w-lg mx-auto">
           <div className="text-center mb-10">
-            <span className="text-[#ff8000] text-xs font-bold tracking-widest uppercase">Únete al equipo</span>
-            <h2 className="text-4xl md:text-5xl font-black text-white mt-2 leading-tight">
-              ¿Listo para que tu hijo entrene con El Gocho?
+            <h2 className="text-4xl md:text-5xl font-black text-white leading-[1.1]">
+              Inicia tu{' '}
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: 'linear-gradient(135deg, #ffb060, #ff8000)' }}
+              >
+                proceso hoy.
+              </span>
             </h2>
-            <p className="text-[#F1F0EC]/55 text-base mt-3">
-              Completa el formulario y te contactamos en 24 horas
+            <p className="text-white/55 text-base mt-4">
+              Completa el formulario y te contactamos en 24 horas por WhatsApp.
             </p>
           </div>
 
           {enviado ? (
-            <div className="bg-[#1e1e70]/40 border border-[#ff8000]/30 rounded-3xl p-10 text-center">
+            <div
+              className="rounded-3xl p-10 text-center border border-[#ff8000]/30"
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(255,128,0,0.08) 0%, rgba(15,15,45,0.7) 60%)',
+              }}
+            >
               <div className="w-20 h-20 bg-[#ff8000]/15 rounded-full flex items-center justify-center mx-auto mb-5">
                 <Check size={38} className="text-[#ff8000]" />
               </div>
               <h3 className="text-2xl font-black text-white mb-3">¡Recibimos tu solicitud!</h3>
-              <p className="text-[#F1F0EC]/65 mb-8 leading-relaxed">
+              <p className="text-white/65 mb-8 leading-relaxed">
                 Te contactaremos en las próximas 24 horas por WhatsApp para confirmar tu cupo.
               </p>
               <a
                 href={`${WA_BASE}?text=${WA_MSG}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-[#25D366] text-white font-bold px-6 py-3.5 rounded-xl hover:bg-green-600 transition"
+                className="inline-flex items-center gap-2 bg-[#25D366] text-white font-bold px-6 py-3 rounded-full hover:bg-green-600 transition"
               >
                 <MessageCircle size={18} /> Escribir al coach
               </a>
             </div>
           ) : (
-            <div className="bg-white/4 border border-white/10 rounded-3xl p-6 md:p-8">
+            <div
+              className="rounded-3xl p-6 md:p-8 border border-white/10"
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(15,15,45,0.7) 0%, rgba(10,10,30,0.6) 100%)',
+              }}
+            >
               {/* Progress bar */}
               <div className="mb-8">
                 <div className="flex justify-between items-center mb-2.5">
@@ -1083,30 +1545,45 @@ export default function Home() {
       </div>
 
       {/* ══════════ SECCIÓN 13 — FOOTER ══════════ */}
-      <footer className="bg-[#0e0e4a] py-12 px-5">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
-            <div className="flex items-center gap-3">
-              <Image src="/logo.png" alt="El Gocho Entrenador" width={48} height={48} className="object-contain" />
-              <div>
-                <p className="text-white font-black text-lg leading-tight">El Gocho Entrenador</p>
-                <p className="text-white/35 text-xs mt-0.5">Academia de fútbol · Caracas</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <a href="https://www.instagram.com/elgochoentrenador" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/8 rounded-xl flex items-center justify-center hover:bg-[#ff8000]/20 transition" aria-label="Instagram">
-                <InstagramIcon size={18} />
-              </a>
-              <a href="https://www.tiktok.com/@elgochoentrenador" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/8 rounded-xl flex items-center justify-center hover:bg-[#ff8000]/20 transition" aria-label="TikTok">
-                <TikTokIcon size={18} />
-              </a>
-              <a href={`${WA_BASE}?text=${WA_MSG}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#25D366]/15 rounded-xl flex items-center justify-center hover:bg-[#25D366]/30 transition" aria-label="WhatsApp">
-                <MessageCircle size={18} color="#25D366" />
-              </a>
-            </div>
+      <footer className="bg-black border-t border-white/8 py-10 px-5">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-5">
+          <div className="flex items-center gap-2.5">
+            <Image src="/logo.png" alt="El Gocho Entrenador" width={36} height={36} className="object-contain" />
+            <p className="text-white font-black text-base">
+              El Gocho<span className="text-[#ff8000]">.</span>
+            </p>
           </div>
-          <div className="border-t border-white/8 pt-6 text-center">
-            <p className="text-white/25 text-sm">© 2026 El Gocho Entrenador · Caracas, Venezuela</p>
+          <p className="text-white/35 text-xs text-center order-3 md:order-2">
+            © 2026 El Gocho Entrenador · Caracas, Venezuela
+          </p>
+          <div className="flex items-center gap-2 order-2 md:order-3">
+            <a
+              href="https://www.instagram.com/elgochoentrenador"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-9 h-9 bg-white/5 border border-white/10 rounded-full flex items-center justify-center hover:bg-[#ff8000]/20 hover:border-[#ff8000]/40 transition"
+              aria-label="Instagram"
+            >
+              <InstagramIcon size={16} />
+            </a>
+            <a
+              href="https://www.tiktok.com/@elgochoentrenador"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-9 h-9 bg-white/5 border border-white/10 rounded-full flex items-center justify-center hover:bg-[#ff8000]/20 hover:border-[#ff8000]/40 transition"
+              aria-label="TikTok"
+            >
+              <TikTokIcon size={16} />
+            </a>
+            <a
+              href={`${WA_BASE}?text=${WA_MSG}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-9 h-9 bg-[#25D366]/15 border border-[#25D366]/30 rounded-full flex items-center justify-center hover:bg-[#25D366]/30 transition"
+              aria-label="WhatsApp"
+            >
+              <MessageCircle size={16} color="#25D366" />
+            </a>
           </div>
         </div>
       </footer>
