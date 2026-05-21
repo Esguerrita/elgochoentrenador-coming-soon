@@ -1550,7 +1550,7 @@ export default function Home() {
           <div className="flex items-center gap-2.5">
             <Image src="/logo.png" alt="El Gocho Entrenador" width={36} height={36} className="object-contain" />
             <p className="text-white font-black text-base">
-              El Gocho<span className="text-[#ff8000]">.</span>
+              El Gocho Entrenador<span className="text-[#ff8000]">.</span>
             </p>
           </div>
           <p className="text-white/35 text-xs text-center order-3 md:order-2">
